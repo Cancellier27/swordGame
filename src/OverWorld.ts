@@ -6,6 +6,7 @@ class OverWorld {
   element: HTMLElement
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
+  map: OverWorldMap | "toBeAssigned"
 
   constructor(config: OverWorldConfig) {
     this.element = config.element
@@ -21,23 +22,70 @@ class OverWorld {
       throw new Error("2D rendering context not supported or canvas already initialized.")
     }
     this.ctx = ctx
+
+    this.map = "toBeAssigned"
+  }
+
+  startGameLoop() {
+    let previousMs: undefined | number = undefined
+
+    // loop at 60 fps
+    const step = 1 / 60
+    const tick = (timestampMs: number) => {
+      // for later on in the code
+      // if (this.hasStopped) {
+      //   return
+      // }
+
+      if (previousMs === undefined) {
+        previousMs = timestampMs
+      }
+
+      let delta = (timestampMs - previousMs) / 1000
+      while (delta >= step) {
+        // what to update during the loop to be put here
+
+        // clear the canvas every time the loop runs, before drawing onto screen.
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+
+        if (this.map !== "toBeAssigned") {
+          console.log("stepping")
+          // Draw LOWER tiles layer
+          this.map.drawLowerImage(this.ctx)
+
+          // players and NPCs
+          Object.values(this.map.gameObjects).forEach((object) => {
+            object.sprite.draw(this.ctx)
+          })
+          // Draw UPPER tiles layer
+          this.map.drawUpperImage(this.ctx)
+        }
+
+        delta -= step
+      }
+      previousMs = timestampMs - delta * 1000
+
+      // recalls the loop tick func
+      requestAnimationFrame(tick)
+    }
+
+    // initial kick off!
+    requestAnimationFrame(tick)
   }
 
   init() {
-    const image = new Image()
-    image.onload = () => {
-      this.ctx.drawImage(image, 0, 0)
-    }
-    image.src = "../images/maps/BosqueLower.png"
-
-    // Place GameObjects
-    const hero = new GameObject({
-      x: 3,
-      y: 6
+    this.map = new OverWorldMap({
+      lowerSrc: "../images/maps/BosqueLower.png",
+      upperSrc: "../images/maps/BosqueUpper.png",
+      gameObjects: {
+        hero: new GameObject({
+          x: 3,
+          y: 6
+        })
+      }
     })
 
-    setTimeout(() => {
-      hero.sprite.draw(this.ctx)
-    }, 200)
+    // start game loop
+    this.startGameLoop()
   }
 }
