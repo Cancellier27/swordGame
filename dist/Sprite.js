@@ -11,7 +11,7 @@ class Sprite {
         };
         // set up shadow image
         this.shadow = new Image();
-        this.useShadow = true;
+        this.useShadow = config.useShadow;
         // control if the asset to be loaded needs a shadow
         if (this.useShadow) {
             this.shadow.src = "../images/characters/shadow.png";
@@ -51,11 +51,13 @@ class Sprite {
             "die-left": [[0, 13], [1, 13], [2, 13], [3, 13], [3, 13]]
         };
         // defines the starting animation frame if not stated
-        this.currentAnimation = config.currentAnimation || "idle-down";
+        this.currentAnimation = config.currentAnimation;
         this.currentAnimationFrame = 0;
         // defines the animation time, for the NPCs to walk
         this.animationFrameLimit = config.animationFrameLimit || 8;
         this.animationFrameLimitProgress = this.animationFrameLimit;
+        // get the tile size for the sprite
+        this.tileSize = config.tileSize;
         // reference GameObject class to be used here
         this.gameObject = config.gameObject;
     }
@@ -95,14 +97,14 @@ class Sprite {
         const [frameX, frameY] = this.frame;
         this.isLoaded &&
             ctx.drawImage(this.image, // image element
-            frameX * 48, // left cut
-            frameY * 48, // top cut
-            48, // width of cut, size of the sprite frame
-            48, // height of cut, size of the sprite frame
+            frameX * this.tileSize, // left cut
+            frameY * this.tileSize, // top cut
+            this.tileSize, // width of cut, size of the sprite frame
+            this.tileSize, // height of cut, size of the sprite frame
             x, // destination x
             y, // destination y
-            48, // destination width
-            48 // destination height
+            this.tileSize, // destination width
+            this.tileSize // destination height
             );
         this.updateAnimationProgress();
     }

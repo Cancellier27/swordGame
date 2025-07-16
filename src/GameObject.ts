@@ -1,8 +1,11 @@
 interface GameObjectConfig {
   x: number
   y: number
-  src?: string
+  src: string
+  currentAnimation: string
   direction?: string
+  tileSize: number,
+  useShadow: boolean
 }
 
 class GameObject {
@@ -10,7 +13,6 @@ class GameObject {
   y: number
   sprite: Sprite
   direction: string
-  
 
   constructor(config: GameObjectConfig) {
     this.x = config.x || 0
@@ -18,11 +20,12 @@ class GameObject {
     this.direction = config.direction || "down"
     this.sprite = new Sprite({
       gameObject: this,
-      src: config.src || "../images/characters/people/player.png"
+      src: config.src,
+      currentAnimation: config.currentAnimation,
+      tileSize: config.tileSize,
+      useShadow: config.useShadow
     })
   }
 
-  update(state: {[key: string]: string}) {
-
-  }
+  update(state: {"arrow": string, "map": OverWorldMap}) {}
 }

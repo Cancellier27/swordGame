@@ -6,9 +6,11 @@ class GameObject {
         this.direction = config.direction || "down";
         this.sprite = new Sprite({
             gameObject: this,
-            src: config.src || "../images/characters/people/player.png"
+            src: config.src,
+            currentAnimation: config.currentAnimation,
+            tileSize: config.tileSize,
+            useShadow: config.useShadow
         });
     }
-    update(state) {
-    }
+    update(state) { }
 }

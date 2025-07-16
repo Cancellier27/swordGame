@@ -1,5 +1,5 @@
 "use strict";
-class Protagonist extends GameObject {
+class NPC extends GameObject {
     constructor(config) {
         super(config);
         this.movingProgressRemaining = 0;

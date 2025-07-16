@@ -68,7 +68,8 @@ class OverWorld {
     // update all objects (for a big game this part here will generate performance issues)
     Object.values(this.map.gameObjects).forEach((object) => {
       object.update({
-        arrow: this.directionInput.direction
+        arrow: this.directionInput.direction,
+        map: this.map
       })
     })
 
@@ -89,10 +90,32 @@ class OverWorld {
       upperSrc: "../images/maps/BosqueUpper.png",
       gameObjects: {
         hero: new Protagonist({
-          x: utils.withGrid(3),
-          y: utils.withGrid(6),
-          isPlayerControlled: true
+          x: utils.withGrid(45),
+          y: utils.withGrid(24),
+          isPlayerControlled: true,
+          currentAnimation: "idle-down",
+          src: "../images/characters/people/player.png",
+          tileSize: 48,
+          useShadow: true
+        }),
+        slime: new NPC({
+          x: utils.withGrid(40),
+          y: utils.withGrid(22),
+          isPlayerControlled: true,
+          currentAnimation: "walk-up",
+          src: "../images/characters/people/slime.png",
+          tileSize: 32,
+          useShadow: false
         })
+      },
+      // walls that player can collide with
+      walls: {
+        [utils.asGridCoord(42, 26)]: true,
+        [utils.asGridCoord(43, 23)]: true,
+        [utils.asGridCoord(44, 23)]: true,
+        [utils.asGridCoord(35, 23)]: true,
+        [utils.asGridCoord(36, 23)]: true,
+        [utils.asGridCoord(37, 23)]: true
       }
     })
 

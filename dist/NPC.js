@@ -1,8 +1,9 @@
 "use strict";
-class Protagonist extends GameObject {
+class NPC extends GameObject {
     constructor(config) {
         super(config);
         this.movingProgressRemaining = 0;
+        this.npcDirection = "walk-up";
         this.isPlayerControlled = config.isPlayerControlled;
         // prettier-ignore
         // prettier-ignore
@@ -27,14 +28,6 @@ class Protagonist extends GameObject {
         }
         else {
             // more cases to start to walk wil come here
-            // arrow comes from the direction input event listener defined in overWorld gameLoop.
-            // if not player, it won't move
-            if (this.isPlayerControlled && state.arrow) {
-                this.startBehavior(state, {
-                    type: "walk",
-                    direction: state.arrow
-                });
-            }
             this.updateSprite();
         }
     }
@@ -76,15 +69,9 @@ class Protagonist extends GameObject {
     }
     updateSprite() {
         if (this.movingProgressRemaining > 0) {
-            this.sprite.setAnimation("walk-" + this.direction);
+            this.sprite.setAnimation(this.npcDirection);
             return;
         }
-        if (this.direction.includes("-")) {
-            let splitDir = this.direction.split("-")[0];
-            this.sprite.setAnimation("idle-" + splitDir);
-        }
-        else {
-            this.sprite.setAnimation("idle-" + this.direction);
-        }
+        this.sprite.setAnimation(this.npcDirection);
     }
 }

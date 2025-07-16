@@ -2,16 +2,20 @@ interface OverWorldMapConfig {
   gameObjects: {[key: string]: GameObject}
   lowerSrc: string
   upperSrc: string
+  walls: {[key: string]: boolean}
 }
 
 class OverWorldMap {
   lowerImage: HTMLImageElement
   upperImage: HTMLImageElement
   gameObjects: {[key: string]: GameObject}
+  walls: {[key: string]: boolean}
 
   constructor(config: OverWorldMapConfig) {
     // references the gameObjects to be used here
     this.gameObjects = config.gameObjects
+
+    this.walls = config.walls || {}
 
     // load the lower image of the map
     this.lowerImage = new Image()
@@ -28,5 +32,11 @@ class OverWorldMap {
 
   drawUpperImage(ctx: CanvasRenderingContext2D, cameraPerson: GameObject) {
     ctx.drawImage(this.upperImage, utils.withGrid(10.5) - cameraPerson.x, utils.withGrid(6) - cameraPerson.y)
+  }
+
+  // check if the space ahead is blocked, or taken
+  isSpaceTaken(currentX: number, currentY: number, direction: string): boolean {
+    const {x, y} = utils.nexPosition(currentX, currentY, direction)
+    return this.walls[`${x},${y}`] || false
   }
 }
