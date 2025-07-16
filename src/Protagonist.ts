@@ -23,6 +23,7 @@ class Protagonist extends GameObject {
 
   update(state: {[key: string]: string}) {
     this.updatePosition()
+    this.updateSprite(state)
 
     // arrow comes from the direction input event listener defined in overWorld gameLoop.
     // if not player, it won't move
@@ -44,6 +45,17 @@ class Protagonist extends GameObject {
         ;(this as any).y += change
       }
       this.movingProgressRemaining -= 1
+    }
+  }
+
+  updateSprite(state: {[key: string]: string}) {
+    if (this.isPlayerControlled && this.movingProgressRemaining === 0 && !state.arrow) {
+      this.sprite.setAnimation("idle-" + this.direction)
+      return
+    }
+
+    if (this.movingProgressRemaining > 0) {
+      this.sprite.setAnimation("walk-" + this.direction)
     }
   }
 }
