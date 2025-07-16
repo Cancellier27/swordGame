@@ -6,7 +6,8 @@ class OverWorld {
   element: HTMLElement
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
-  map: OverWorldMap | "toBeAssigned"
+  map!: OverWorldMap
+  directionInput!: DirectionInputs
 
   constructor(config: OverWorldConfig) {
     this.element = config.element
@@ -23,7 +24,7 @@ class OverWorld {
     }
     this.ctx = ctx
 
-    this.map = "toBeAssigned"
+    // this.map = "toBeAssigned"
   }
 
   startGameLoop() {
@@ -48,18 +49,18 @@ class OverWorld {
         // clear the canvas every time the loop runs, before drawing onto screen.
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
-        if (this.map !== "toBeAssigned") {
-          console.log("stepping")
-          // Draw LOWER tiles layer
-          this.map.drawLowerImage(this.ctx)
+        // Draw LOWER tiles layer
+        this.map.drawLowerImage(this.ctx)
 
-          // players and NPCs
-          Object.values(this.map.gameObjects).forEach((object) => {
-            object.sprite.draw(this.ctx)
+        // players and NPCs
+        Object.values(this.map.gameObjects).forEach((object) => {
+          object.update({
+            arrow: this.directionInput.direction
           })
-          // Draw UPPER tiles layer
-          this.map.drawUpperImage(this.ctx)
-        }
+          object.sprite.draw(this.ctx)
+        })
+        // Draw UPPER tiles layer
+        this.map.drawUpperImage(this.ctx)
 
         delta -= step
       }
@@ -78,12 +79,17 @@ class OverWorld {
       lowerSrc: "../images/maps/BosqueLower.png",
       upperSrc: "../images/maps/BosqueUpper.png",
       gameObjects: {
-        hero: new GameObject({
-          x: 3,
-          y: 6
+        hero: new Protagonist({
+          x: utils.withGrid(3),
+          y: utils.withGrid(6),
+          isPlayerControlled: true
         })
       }
     })
+
+    // create and initializes the class DirectionInput to listen to keyboard press
+    this.directionInput = new DirectionInputs()
+    this.directionInput.init()
 
     // start game loop
     this.startGameLoop()

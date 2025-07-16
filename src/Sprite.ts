@@ -48,8 +48,8 @@ class Sprite {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    const x: number = this.gameObject.x * 16 - 8
-    const y: number = this.gameObject.y * 16 - 18
+    const x: number = this.gameObject.x - 8
+    const y: number = this.gameObject.y - 18
 
     this.isShadowLoaded &&
       ctx.drawImage(
