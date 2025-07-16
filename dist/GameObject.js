@@ -1,6 +1,7 @@
 "use strict";
 class GameObject {
     constructor(config) {
+        this.isMounted = false;
         this.x = config.x || 0;
         this.y = config.y || 0;
         this.direction = config.direction || "down";
@@ -11,6 +12,11 @@ class GameObject {
             tileSize: config.tileSize,
             useShadow: config.useShadow
         });
+    }
+    // mount wall
+    mount(map) {
+        this.isMounted = true;
+        map.addWall(this.x, this.y);
     }
     update(state) { }
 }

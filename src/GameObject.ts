@@ -4,7 +4,7 @@ interface GameObjectConfig {
   src: string
   currentAnimation: string
   direction?: string
-  tileSize: number,
+  tileSize: number
   useShadow: boolean
 }
 
@@ -13,8 +13,10 @@ class GameObject {
   y: number
   sprite: Sprite
   direction: string
+  isMounted: boolean
 
   constructor(config: GameObjectConfig) {
+    this.isMounted = false
     this.x = config.x || 0
     this.y = config.y || 0
     this.direction = config.direction || "down"
@@ -27,5 +29,11 @@ class GameObject {
     })
   }
 
-  update(state: {"arrow": string, "map": OverWorldMap}) {}
+  // mount wall
+  mount(map: OverWorldMap) {
+    this.isMounted = true
+    map.addWall(this.x, this.y)
+  }
+
+  update(state: {arrow: string; map: OverWorldMap}) {}
 }

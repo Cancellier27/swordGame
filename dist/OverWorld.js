@@ -72,7 +72,9 @@ class OverWorld {
                     currentAnimation: "idle-down",
                     src: "../images/characters/people/player.png",
                     tileSize: 48,
-                    useShadow: true
+                    useShadow: true,
+                    width: 15,
+                    height: 21
                 }),
                 slime: new NPC({
                     x: utils.withGrid(40),
@@ -81,19 +83,22 @@ class OverWorld {
                     currentAnimation: "walk-up",
                     src: "../images/characters/people/slime.png",
                     tileSize: 32,
-                    useShadow: false
+                    useShadow: false,
+                    width: 20,
+                    height: 12
                 })
             },
             // walls that player can collide with
             walls: {
-                [utils.asGridCoord(42, 26)]: true,
-                [utils.asGridCoord(43, 23)]: true,
-                [utils.asGridCoord(44, 23)]: true,
-                [utils.asGridCoord(35, 23)]: true,
-                [utils.asGridCoord(36, 23)]: true,
-                [utils.asGridCoord(37, 23)]: true
+            // [utils.asGridCoord(42, 26)]: true,
+            // [utils.asGridCoord(43, 23)]: true,
+            // [utils.asGridCoord(44, 23)]: true,
+            // [utils.asGridCoord(35, 23)]: true,
+            // [utils.asGridCoord(36, 23)]: true,
+            // [utils.asGridCoord(37, 23)]: true
             }
         });
+        // this.map.mountObjects()
         // create and initializes the class DirectionInput to listen to keyboard press
         this.directionInput = new DirectionInputs();
         this.directionInput.init();

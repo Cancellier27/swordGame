@@ -87,8 +87,8 @@ class Sprite {
         }
     }
     draw(ctx, cameraPerson) {
-        const x = this.gameObject.x - 8 + utils.withGrid(10.5) - cameraPerson.x;
-        const y = this.gameObject.y - 18 + utils.withGrid(6) - cameraPerson.y;
+        const x = this.gameObject.x - 18 + utils.withGrid(10.5) - cameraPerson.x;
+        const y = this.gameObject.y - 22 + utils.withGrid(6) - cameraPerson.y;
         this.isShadowLoaded &&
             ctx.drawImage(this.shadow, // image element
             x + 8, // destination x
