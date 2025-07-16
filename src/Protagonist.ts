@@ -59,18 +59,17 @@ class Protagonist extends GameObject {
     // set the character to walk or do some behavior
     this.direction = behavior.direction
 
-    // if (behavior.type === "walk") {
-    //   if (state.map.isSpaceTaken(this.x, this.y, this.direction)) {
-
-    //     // if space is taken ahead, return and do not move
-    //     // return
-    //   }
+    if (behavior.type === "walk") {
+      if (state.map.isSpaceTaken(this.x, this.y, this.direction)) {
+        // if space is taken ahead, return and do not move
+        return
+      }
 
     // set a wall onto the next space here will be
     // state.map.moveWall(this.x, this.y, this.direction)
     // keep walking!
     this.movingProgressRemaining = 4
-    // }
+    }
   }
 
   // update player position and movingProgressRemaining

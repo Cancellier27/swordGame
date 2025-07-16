@@ -25,7 +25,7 @@ class OverWorldMap {
     this.upperImage = new Image()
     this.upperImage.src = config.upperSrc
 
-    // this.mountMapWalls()
+    this.mountMapWalls()
   }
 
   drawLowerImage(ctx: CanvasRenderingContext2D, cameraPerson: GameObject) {
@@ -36,17 +36,22 @@ class OverWorldMap {
     ctx.drawImage(this.upperImage, utils.withGrid(10.5) - cameraPerson.x, utils.withGrid(6) - cameraPerson.y)
   }
 
-
-  // mountObjects() {   
+  // mountObjects() {
   //   Object.values(this.gameObjects).forEach((object) => {
   //     // TODO, determine if this element should really mount
   //     object.mount(this)
   //   })
   // }
 
-  // mountMapWalls() {
-  //   utils.createMapWalls([[42,26],[43,23],[44,23],[35,23],[36,23],[37,23]], this.walls)
-  // }
+  mountMapWalls() {
+    utils.createMapWalls([[42, 26]], this.walls)
+    // utils.createMapWalls([[42,26],[43,23],[44,23],[35,23],[36,23],[37,23]], this.walls)
+  }
+
+  isSpaceTaken(currentX: number, currentY: number, direction: string) {
+    const {x, y} = utils.nextPosition(currentX, currentY, direction)
+    return this.walls[`${x},${y}`] || false
+  }
 
   // walls functions, add, remove and move
   addWall(x: number, y: number) {
@@ -57,9 +62,9 @@ class OverWorldMap {
     delete this.walls[`${x},${y}`]
   }
 
-  // moveWall(wasX: number, wasY: number, direction: string) {
-  //   this.removeWall(wasX, wasY)
-
-  //   this.addWall(x, y)
-  // }
+  moveWall(wasX: number, wasY: number, direction: string) {
+    this.removeWall(wasX, wasY)
+    const {x, y} = utils.nextPosition(wasX, wasY, direction)
+    this.addWall(x, y)
+  }
 }
