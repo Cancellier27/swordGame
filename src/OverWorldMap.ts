@@ -1,5 +1,5 @@
 interface OverWorldMapConfig {
-  gameObjects: { [key: string]: GameObject }
+  gameObjects: {[key: string]: GameObject}
   lowerSrc: string
   upperSrc: string
 }
@@ -7,7 +7,7 @@ interface OverWorldMapConfig {
 class OverWorldMap {
   lowerImage: HTMLImageElement
   upperImage: HTMLImageElement
-  gameObjects: { [key: string]: GameObject }
+  gameObjects: {[key: string]: GameObject}
 
   constructor(config: OverWorldMapConfig) {
     // references the gameObjects to be used here
@@ -22,13 +22,11 @@ class OverWorldMap {
     this.upperImage.src = config.upperSrc
   }
 
-  drawLowerImage(ctx: CanvasRenderingContext2D) {
-    ctx.drawImage(this.lowerImage, 0, 0)
+  drawLowerImage(ctx: CanvasRenderingContext2D, cameraPerson: GameObject) {
+    ctx.drawImage(this.lowerImage, utils.withGrid(10.5) - cameraPerson.x, utils.withGrid(6) - cameraPerson.y)
   }
 
-  drawUpperImage(ctx: CanvasRenderingContext2D) {
-    ctx.drawImage(this.upperImage, 0, 0)
+  drawUpperImage(ctx: CanvasRenderingContext2D, cameraPerson: GameObject) {
+    ctx.drawImage(this.upperImage, utils.withGrid(10.5) - cameraPerson.x, utils.withGrid(6) - cameraPerson.y)
   }
 }
-
-

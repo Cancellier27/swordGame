@@ -41,17 +41,21 @@ class Sprite {
     // Configure animation and initial state
     // prettier-ignore
     this.animations = config.animations || {
+      "idle-up": [[0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [5, 2]],
       "idle-down": [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0]],
       "idle-right": [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [5, 1]],
       "idle-left": [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [5, 1]],
-      "idle-up": [[0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [5, 2]],
+      "walk-up": [[0, 5], [1, 5], [2, 5], [3, 5], [4, 5], [5, 5]],
       "walk-down": [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3], [5, 3]],
       "walk-right": [[0, 4], [1, 4], [2, 4], [3, 4], [4, 4], [5, 4]],
       "walk-left": [[0, 4], [1, 4], [2, 4], [3, 4], [4, 4], [5, 4]],
-      "walk-up": [[0, 5], [1, 5], [2, 5], [3, 5], [4, 5], [5, 5]]
+      "attack-up": [[0, 8], [1, 8], [2, 8], [3, 8]],
+      "attack-down": [[0, 6], [1, 6], [2, 6], [3, 6]],
+      "attack-right": [[0, 7], [1, 7], [2, 7], [3, 7]],
+      "die-right": [[0, 9], [1, 9], [2, 9], [2, 9], [2, 9]]
     }
     // defines the starting animation frame if not stated
-    this.currentAnimation = "walk-up" //config.currentAnimation || "idle-down"
+    this.currentAnimation = config.currentAnimation || "idle-down"
     this.currentAnimationFrame = 0
 
     // defines the animation time, for the NPCs to walk
@@ -92,9 +96,9 @@ class Sprite {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
-    const x: number = this.gameObject.x - 8
-    const y: number = this.gameObject.y - 18
+  draw(ctx: CanvasRenderingContext2D, cameraPerson: GameObject) {
+    const x: number = this.gameObject.x - 8 + utils.withGrid(10.5) - cameraPerson.x
+    const y: number = this.gameObject.y - 18 + utils.withGrid(6) - cameraPerson.y
 
     this.isShadowLoaded &&
       ctx.drawImage(

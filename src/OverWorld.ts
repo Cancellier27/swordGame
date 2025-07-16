@@ -27,11 +27,11 @@ class OverWorld {
     // this.map = "toBeAssigned"
   }
 
-  startGameLoop() {
+  startGameLoop(fps: number) {
     let previousMs: undefined | number = undefined
 
-    // loop at 60 fps
-    const step = 1 / 60
+    // loop at X fps, 60 in this game
+    const step = 1 / fps
     const tick = (timestampMs: number) => {
       // for later on in the code
       // if (this.hasStopped) {
@@ -44,24 +44,7 @@ class OverWorld {
 
       let delta = (timestampMs - previousMs) / 1000
       while (delta >= step) {
-        // what to update during the loop to be put here
-
-        // clear the canvas every time the loop runs, before drawing onto screen.
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-
-        // Draw LOWER tiles layer
-        this.map.drawLowerImage(this.ctx)
-
-        // players and NPCs
-        Object.values(this.map.gameObjects).forEach((object) => {
-          object.update({
-            arrow: this.directionInput.direction
-          })
-          object.sprite.draw(this.ctx)
-        })
-        // Draw UPPER tiles layer
-        this.map.drawUpperImage(this.ctx)
-
+        this.loop()
         delta -= step
       }
       previousMs = timestampMs - delta * 1000
@@ -72,6 +55,32 @@ class OverWorld {
 
     // initial kick off!
     requestAnimationFrame(tick)
+  }
+
+  loop() {
+    // what to update during the loop to be put here
+
+    // clear the canvas every time the loop runs, before drawing onto screen.
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    // Establish the camera person
+    const cameraPerson = this.map.gameObjects.hero
+
+    // update all objects (for a big game this part here will generate performance issues)
+    Object.values(this.map.gameObjects).forEach((object) => {
+      object.update({
+        arrow: this.directionInput.direction
+      })
+    })
+
+    // Draw LOWER tiles layer
+    this.map.drawLowerImage(this.ctx, cameraPerson)
+
+    // players and NPCs
+    Object.values(this.map.gameObjects).forEach((object) => {
+      object.sprite.draw(this.ctx, cameraPerson)
+    })
+    // Draw UPPER tiles layer
+    this.map.drawUpperImage(this.ctx, cameraPerson)
   }
 
   init() {
@@ -92,6 +101,6 @@ class OverWorld {
     this.directionInput.init()
 
     // start game loop
-    this.startGameLoop()
+    this.startGameLoop(60)
   }
 }
