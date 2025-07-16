@@ -3,6 +3,7 @@ interface SpriteConfig {
   currentAnimation?: string
   src: string
   gameObject: GameObject
+  animationFrameLimit: number
 }
 
 class Sprite {
@@ -15,6 +16,8 @@ class Sprite {
   isShadowLoaded: boolean = false
   gameObject: GameObject
   useShadow: boolean
+  animationFrameLimit: number
+  animationFrameLimitProgress: number
 
   constructor(config: SpriteConfig) {
     // set up the image to be used in this sprite
@@ -36,15 +39,43 @@ class Sprite {
     }
 
     // Configure animation and initial state
+    // prettier-ignore
     this.animations = config.animations || {
-      idleDown: [[0, 0]]
+      "idle-down": [[0, 0]],
+      "walk-down": [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3], [5, 3]]
     }
     // defines the starting animation frame if not stated
-    this.currentAnimation = config.currentAnimation || "idleDown"
+    this.currentAnimation = "walk-down" //config.currentAnimation || "idle-down"
     this.currentAnimationFrame = 0
+
+    // defines the animation time, for the npcs to walk
+    this.animationFrameLimit = config.animationFrameLimit || 16
+    this.animationFrameLimitProgress = this.animationFrameLimit
 
     // reference GameObject class to be used here
     this.gameObject = config.gameObject
+  }
+
+  // gets the animation frame that the player is on.
+  get frame() {
+    return this.animations[this.currentAnimation][this.currentAnimationFrame]
+  }
+
+  updateAnimationProgress() {
+    // downtick frame progress, if animationFrameLimitProgress is not 0, do not update anything
+    if (this.animationFrameLimitProgress > 0) {
+      this.animationFrameLimitProgress -= 1
+      return
+    }
+
+    // reset the counter if animationFrameLimitProgress is 0
+    this.animationFrameLimitProgress = this.animationFrameLimit
+    this.currentAnimationFrame += 1
+
+    // reset the animation frame to the first one
+    if (this.frame === undefined) {
+      this.currentAnimationFrame = 0
+    }
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -58,11 +89,13 @@ class Sprite {
         y + 12 // destination y
       )
 
+    const [frameX, frameY] = this.frame
+
     this.isLoaded &&
       ctx.drawImage(
         this.image, // image element
-        0, // left cut
-        0, // top cut
+        frameX * 48, // left cut
+        frameY * 48, // top cut
         48, // width of cut, size of the sprite frame
         48, // height of cut, size of the sprite frame
         x, // destination x
@@ -70,5 +103,7 @@ class Sprite {
         48, // destination width
         48 // destination height
       )
+
+    this.updateAnimationProgress()
   }
 }
