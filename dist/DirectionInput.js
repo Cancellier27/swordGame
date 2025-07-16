@@ -13,10 +13,32 @@ class DirectionInputs {
             ArrowLeft: "left",
             KeyA: "left"
         };
+        this.validDiagonalMovements = [
+            "up-right",
+            "right-up",
+            "down-right",
+            "right-down",
+            "up-left",
+            "left-up",
+            "down-left",
+            "left-down"
+        ];
     }
     // acts like a value from the class but it is dynamic and always will have the 0 value from the heldDirections array
     get direction() {
-        return this.heldDirections[0];
+        if (this.heldDirections.length > 1) {
+            let dir = this.heldDirections.slice(0, 2).join("-");
+            if (this.validDiagonalMovements.includes(dir)) {
+                // moving diagonally
+                return dir;
+            }
+            else {
+                return this.heldDirections[0];
+            }
+        }
+        else {
+            return this.heldDirections[0];
+        }
     }
     init() {
         // event listener for when a key is pressed to ADD that arrow value into the helDirections array
