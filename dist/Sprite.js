@@ -19,6 +19,7 @@ class Sprite {
         this.shadow.onload = () => {
             this.isShadowLoaded = true;
         };
+        // get the physics World
         // Configure animation and initial state
         // prettier-ignore
         this.animations = config.animations || {

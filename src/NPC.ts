@@ -1,5 +1,6 @@
 interface NPCConfig extends GameObjectConfig {
   isPlayerControlled: boolean
+  world: Matter.World
 }
 
 class NPC extends GameObject {
@@ -8,7 +9,7 @@ class NPC extends GameObject {
   isPlayerControlled: boolean
   npcDirection: string
 
-  constructor(config: ProtagonistConfig) {
+  constructor(config: NPCConfig) {
     super(config)
     this.movingProgressRemaining = 0
 

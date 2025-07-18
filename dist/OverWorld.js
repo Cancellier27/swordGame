@@ -12,7 +12,8 @@ class OverWorld {
             throw new Error("2D rendering context not supported or canvas already initialized.");
         }
         this.ctx = ctx;
-        // this.map = "toBeAssigned"
+        this.gamePhysics = new PhysicsEngine();
+        this.world = this.gamePhysics.world;
     }
     startGameLoop(fps) {
         let previousMs = undefined;
@@ -46,6 +47,19 @@ class OverWorld {
         const cameraPerson = this.map.gameObjects.hero;
         // update all objects (for a big game this part here will generate performance issues)
         Object.values(this.map.gameObjects).forEach((object) => {
+            let x = 0;
+            let y = 0;
+            if (object.tileSize === 48) {
+                x = object.x + utils.withGrid(10.5) - cameraPerson.x;
+                y = object.y + 3 + utils.withGrid(6) - cameraPerson.y;
+            }
+            else {
+                x = object.x - 8 + utils.withGrid(10.5) - cameraPerson.x;
+                y = object.y - 13 + utils.withGrid(6) - cameraPerson.y;
+            }
+            if (object.body) {
+                Matter.Body.setPosition(object.body, { x: x, y: y });
+            }
             object.update({
                 arrow: this.directionInput.direction,
                 map: this.map
@@ -56,9 +70,18 @@ class OverWorld {
         // players and NPCs
         Object.values(this.map.gameObjects).forEach((object) => {
             object.sprite.draw(this.ctx, cameraPerson);
+            if (object.body) {
+                this.map.drawBodies(this.ctx, cameraPerson, object.body, object.width, object.height);
+            }
         });
         // Draw UPPER tiles layer
         this.map.drawUpperImage(this.ctx, cameraPerson);
+    }
+    createBodies(map) {
+        const cameraman = { x: map.gameObjects.hero.x, y: map.gameObjects.hero.y };
+        Object.values(map.gameObjects).forEach((object) => {
+            object.createPhysicalBody(cameraman);
+        });
     }
     init() {
         this.map = new OverWorldMap({
@@ -66,6 +89,7 @@ class OverWorld {
             upperSrc: "../images/maps/BosqueUpper.png",
             gameObjects: {
                 hero: new Protagonist({
+                    type: "player",
                     x: utils.withGrid(45),
                     y: utils.withGrid(24),
                     isPlayerControlled: true,
@@ -74,9 +98,11 @@ class OverWorld {
                     tileSize: 48,
                     useShadow: true,
                     width: 15,
-                    height: 21
+                    height: 21,
+                    world: this.world
                 }),
                 slime: new NPC({
+                    type: "npc",
                     x: utils.withGrid(40),
                     y: utils.withGrid(22),
                     isPlayerControlled: true,
@@ -85,7 +111,8 @@ class OverWorld {
                     tileSize: 32,
                     useShadow: false,
                     width: 20,
-                    height: 12
+                    height: 12,
+                    world: this.world
                 })
             },
             // walls that player can collide with
@@ -102,6 +129,11 @@ class OverWorld {
         // create and initializes the class DirectionInput to listen to keyboard press
         this.directionInput = new DirectionInputs();
         this.directionInput.init();
+        // create npc and player physical bodies
+        this.createBodies(this.map);
+        // start Listening for collisions
+        this.gamePhysics.init();
+        this.gamePhysics.listenForCollisions(this.map);
         // start game loop
         this.startGameLoop(60);
     }

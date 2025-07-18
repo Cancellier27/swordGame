@@ -41,6 +41,8 @@ class Sprite {
       this.isShadowLoaded = true
     }
 
+    // get the physics World
+
     // Configure animation and initial state
     // prettier-ignore
     this.animations = config.animations || {
@@ -73,7 +75,7 @@ class Sprite {
       "die-left": [[0, 13], [1, 13], [2, 13], [3, 13], [3, 13]]
     }
     // defines the starting animation frame if not stated
-    this.currentAnimation = config.currentAnimation 
+    this.currentAnimation = config.currentAnimation
     this.currentAnimationFrame = 0
 
     // defines the animation time, for the NPCs to walk
@@ -117,6 +119,7 @@ class Sprite {
     }
   }
 
+
   draw(ctx: CanvasRenderingContext2D, cameraPerson: GameObject) {
     const x: number = this.gameObject.x - 24 + utils.withGrid(10.5) - cameraPerson.x
     const y: number = this.gameObject.y - 29 + utils.withGrid(6) - cameraPerson.y
@@ -142,6 +145,7 @@ class Sprite {
         this.tileSize, // destination width
         this.tileSize // destination height
       )
+
 
     this.updateAnimationProgress()
   }

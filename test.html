@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Action RPG Demo with Matter.js</title>
+  <style>
+    canvas {
+      border: 1px solid #ccc;
+      background-color: #f0f0f0;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game" width="800" height="600"></canvas>
+
+  <script type="module">
+    // Import Matter.js modules from CDN
+    import Matter from 'https://cdn.skypack.dev/matter-js';
+
+    const {
+      Engine,
+      World,
+      Bodies,
+      Body,
+      Events,
+      Vector
+    } = Matter;
+
+    // Setup canvas and rendering context
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+
+    // Create physics engine
+    const engine = Engine.create();
+    const world = engine.world;
+    world.gravity.y = 0; // No gravity (top-down game)
+
+    // Create player, enemy, and static building bodies
+    const player = Bodies.circle(100, 100, 20, { label: 'player', frictionAir: 0.2 });
+    const enemy = Bodies.circle(300, 100, 20, { label: 'enemy', frictionAir: 0.2 });
+    const building = Bodies.rectangle(400, 300, 100, 100, { isStatic: true, label: 'building' });
+
+    World.add(world, [player, enemy, building]);
+
+    // Input handling
+    const keys = {};
+    window.addEventListener('keydown', (e) => keys[e.key] = true);
+    window.addEventListener('keyup', (e) => keys[e.key] = false);
+
+    // Melee attack cooldown and reference to attack hitbox
+    let attackCooldown = 0;
+    let attackBox = null;
+
+    // Handle keyboard movement and attacks
+    function handleInput() {
+      let speed = 0.005;
+      let force = { x: 0, y: 0 };
+
+      // Movement input (WASD)
+      if (keys['w']) force.y -= speed;
+      if (keys['s']) force.y += speed;
+      if (keys['a']) force.x -= speed;
+      if (keys['d']) force.x += speed;
+
+      Body.applyForce(player, player.position, force);
+
+      // Space to trigger melee attack
+      if (keys[' '] && attackCooldown <= 0) {
+        spawnAttack();
+        attackCooldown = 30; // cooldown in frames
+      }
+    }
+
+    // Spawn melee attack hitbox in front of player
+    function spawnAttack() {
+      const size = 20;
+      const offset = 30; // how far in front of player to spawn
+      const attackX = player.position.x + offset;
+      const attackY = player.position.y;
+
+      attackBox = Bodies.rectangle(attackX, attackY, size, size, {
+        isSensor: true,     // No physical collision
+        isStatic: true,     // Doesn't move
+        label: 'attack'
+      });
+
+      World.add(world, attackBox);
+
+      // Auto-remove the hitbox after 150ms
+      setTimeout(() => {
+        World.remove(world, attackBox);
+        attackBox = null;
+      }, 150);
+    }
+
+    // Handle collisions: player/enemy and attack/enemy
+    Events.on(engine, 'collisionStart', (event) => {
+      for (const pair of event.pairs) {
+        const { bodyA, bodyB } = pair;
+
+        // Player and enemy bumping into each other
+        if ((bodyA.label === 'player' && bodyB.label === 'enemy') ||
+            (bodyA.label === 'enemy' && bodyB.label === 'player')) {
+          const attacker = bodyA.label === 'player' ? bodyA : bodyB;
+          const victim = attacker === bodyA ? bodyB : bodyA;
+
+          const dir = Vector.normalise(Vector.sub(victim.position, attacker.position));
+          Body.applyForce(victim, victim.position, {
+            x: dir.x * 0.05,
+            y: dir.y * 0.05
+          });
+        }
+
+        // Melee attack hits enemy
+        if ((bodyA.label === 'attack' && bodyB.label === 'enemy') ||
+            (bodyA.label === 'enemy' && bodyB.label === 'attack')) {
+          const victim = bodyA.label === 'enemy' ? bodyA : bodyB;
+          const dir = Vector.normalise(Vector.sub(victim.position, player.position));
+
+          // Apply knockback using velocity for immediate reaction
+          Body.setVelocity(victim, {
+            x: dir.x * 5,
+            y: dir.y * 5
+          });
+        }
+      }
+    });
+
+    // Helper function to draw circular or rectangular bodies
+    function drawBody(body, color) {
+      ctx.save();
+      ctx.translate(body.position.x, body.position.y);
+      ctx.rotate(body.angle);
+      ctx.fillStyle = color;
+
+      if (body.circleRadius) {
+        ctx.beginPath();
+        ctx.arc(0, 0, body.circleRadius, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        const w = body.bounds.max.x - body.bounds.min.x;
+        const h = body.bounds.max.y - body.bounds.min.y;
+        ctx.fillRect(-w / 2, -h / 2, w, h);
+      }
+      ctx.restore();
+    }
+
+    // Rendering loop
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawBody(player, 'blue');     // Player = blue
+      drawBody(enemy, 'red');       // Enemy = red
+      drawBody(building, '#666');   // Building = gray
+      if (attackBox) drawBody(attackBox, 'orange'); // Attack = orange
+      requestAnimationFrame(render);
+    }
+
+    // Game loop to update physics and manage state
+    function gameLoop() {
+      handleInput();
+      Engine.update(engine, 1000 / 60);
+      if (attackCooldown > 0) attackCooldown--;
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Start both loops
+    render();
+    gameLoop();
+  </script>
+</body>
+</html>

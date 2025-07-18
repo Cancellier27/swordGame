@@ -4,8 +4,6 @@ class Protagonist extends GameObject {
         super(config);
         this.movingProgressRemaining = 0;
         this.isPlayerControlled = config.isPlayerControlled;
-        this.width = config.width;
-        this.height = config.height;
         // prettier-ignore
         this.directionUpdate = {
             "up": [["y", -1]],
@@ -43,7 +41,7 @@ class Protagonist extends GameObject {
         // set the character to walk or do some behavior
         this.direction = behavior.direction;
         if (behavior.type === "walk") {
-            if (state.map.isSpaceTaken(this.x, this.y, this.direction)) {
+            if (state.map.isColliding) {
                 // if space is taken ahead, return and do not move
                 return;
             }

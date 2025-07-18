@@ -1,24 +1,18 @@
 interface ProtagonistConfig extends GameObjectConfig {
   isPlayerControlled: boolean
-  width: number
-  height: number
+  world: Matter.World
 }
 
 class Protagonist extends GameObject {
   movingProgressRemaining: number
   directionUpdate: {[key: string]: [string, number][]}
   isPlayerControlled: boolean
-  width: number
-  height: number
 
   constructor(config: ProtagonistConfig) {
     super(config)
     this.movingProgressRemaining = 0
 
     this.isPlayerControlled = config.isPlayerControlled
-
-    this.width = config.width
-    this.height = config.height
 
     // prettier-ignore
     this.directionUpdate = {
@@ -60,15 +54,15 @@ class Protagonist extends GameObject {
     this.direction = behavior.direction
 
     if (behavior.type === "walk") {
-      if (state.map.isSpaceTaken(this.x, this.y, this.direction)) {
+      if (state.map.isColliding) {
         // if space is taken ahead, return and do not move
         return
       }
 
-    // set a wall onto the next space here will be
-    // state.map.moveWall(this.x, this.y, this.direction)
-    // keep walking!
-    this.movingProgressRemaining = 4
+      // set a wall onto the next space here will be
+      // state.map.moveWall(this.x, this.y, this.direction)
+      // keep walking!
+      this.movingProgressRemaining = 4
     }
   }
 

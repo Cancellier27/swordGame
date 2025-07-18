@@ -1,9 +1,11 @@
 "use strict";
+const { Events } = Matter;
 class OverWorldMap {
     constructor(config) {
         // references the gameObjects to be used here
         this.gameObjects = config.gameObjects;
         this.walls = config.walls || {};
+        this.isColliding = false;
         // load the lower image of the map
         this.lowerImage = new Image();
         this.lowerImage.src = config.lowerSrc;
@@ -17,6 +19,17 @@ class OverWorldMap {
     }
     drawUpperImage(ctx, cameraPerson) {
         ctx.drawImage(this.upperImage, utils.withGrid(10.5) - cameraPerson.x, utils.withGrid(6) - cameraPerson.y);
+    }
+    drawBodies(ctx, cameraPerson, body, width, height) {
+        const pos = body.position;
+        const angle = body.angle;
+        ctx.save();
+        ctx.translate(pos.x, pos.y);
+        ctx.rotate(angle);
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(-width / 2, -height / 2, width, height);
+        ctx.restore();
     }
     // mountObjects() {
     //   Object.values(this.gameObjects).forEach((object) => {
