@@ -68,8 +68,8 @@ class OverWorld {
             upperSrc: "../images/maps/TestMap_upper.png",
             gameObjects: {
                 hero: new Protagonist({
-                    x: utils.withGrid(3),
-                    y: utils.withGrid(8),
+                    x: utils.withGrid(4),
+                    y: utils.withGrid(9),
                     isPlayerControlled: true,
                     currentAnimation: "idle-down",
                     src: "../images/characters/people/player.png",

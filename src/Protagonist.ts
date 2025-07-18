@@ -54,8 +54,30 @@ class Protagonist extends GameObject {
 
     if (behavior.type === "walk") {
       if (state.map.isSpaceTaken(this.x, this.y, this.direction)) {
-        // if space is taken ahead, return and do not move
-        return
+        const validDiagonalMovements = [
+          "up-right",
+          "right-up",
+          "down-right",
+          "right-down",
+          "up-left",
+          "left-up",
+          "down-left",
+          "left-down"
+        ]
+        if (validDiagonalMovements.includes(this.direction)) {
+          const dir = this.direction.split("-")
+
+          if (!state.map.isSpaceTaken(this.x, this.y, dir[0])) {
+            this.direction = dir[0]
+          } else if (!state.map.isSpaceTaken(this.x, this.y, dir[1])) {
+            this.direction = dir[1]
+          } else {
+            return
+          }
+        } else {
+          // if space is taken ahead, return and do not move
+          return
+        }
       }
 
       // set a wall onto the next space here will be

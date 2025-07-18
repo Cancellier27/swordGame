@@ -21,22 +21,22 @@ const utils = {
         if (direction === "left") {
             topLX -= size;
             botLX -= size;
-            return [[topLX, topLY], [botLX, botLY]];
+            return [[topLX, topLY], [botLX, botLY], [topLX, topLY + 8]];
         }
         else if (direction === "right") {
             topRX += size;
             botRX += size;
-            return [[topRX, topRY], [botRX, botRY]];
+            return [[topRX, topRY], [botRX, botRY], [topRX, topRY + 8]];
         }
         else if (direction === "up") {
             topLY -= size;
             topRY -= size;
-            return [[topLX, topLY], [topRX, topRY]];
+            return [[topLX, topLY], [topRX, topRY], [topLX + 8, topLY]];
         }
         else if (direction === "down") {
             botLY += size;
             botRY += size;
-            return [[botLX, botLY], [botRX, botRY]];
+            return [[botLX, botLY], [botRX, botRY], [botLX + 8, botLY]];
         }
         else if (direction === "left-up" || direction === "up-left") {
             topLX -= size;
@@ -45,7 +45,7 @@ const utils = {
             topRY -= size;
             topRX -= size;
             botLY -= size;
-            return [[topLX, topLY], [topRX, topRY], [botLX, botLY]];
+            return [[topLX, topLY], [topRX, topRY], [botLX, botLY], [topLX + 8, topLY], [topLX, topLY + 8]];
         }
         else if (direction === "left-down" || direction === "down-left") {
             topLX -= size;
@@ -54,7 +54,7 @@ const utils = {
             botLY += size;
             botRX -= size;
             botRY += size;
-            return [[topLX, topLY], [botRX, botRY], [botLX, botLY]];
+            return [[topLX, topLY], [botRX, botRY], [botLX, botLY], [botLX + 8, botLY], [botLX, botLY - 8]];
         }
         else if (direction === "right-down" || direction === "down-right") {
             topRX += size;
@@ -63,7 +63,7 @@ const utils = {
             botLY += size;
             botRX += size;
             botRY += size;
-            return [[topRX, topRY], [botRX, botRY], [botLX, botLY]];
+            return [[topRX, topRY], [botRX, botRY], [botLX, botLY], [botRX - 8, botRY], [botRX, botRY - 8]];
         }
         else if (direction === "right-up" || direction === "up-right") {
             topRX += size;
@@ -72,34 +72,25 @@ const utils = {
             topLY -= size;
             botRX += size;
             botRY -= size;
-            return [[topRX, topRY], [botRX, botRY], [topLX, topLY]];
+            return [[topRX, topRY], [botRX, botRY], [topLX, topLY], [topRX - 8, topRY], [topRX, topRY + 8]];
         }
     },
     createMapWalls(wallsArr, walls) {
         wallsArr.forEach((wall) => {
             let x = wall[0] * 16; //tile X
             let y = wall[1] * 16; //tile Y
-            // ref point wall
-            walls[`${x},${y}`] = true; // 0x0 <-
             // left wall
-            walls[`${x},${y + 4}`] = true; // 0x4
-            walls[`${x},${y + 8}`] = true; // 0x8
-            walls[`${x},${y + 12}`] = true; // 0x12
-            walls[`${x},${y + 16}`] = true; // 0x16 <-
+            walls[`${x + 4},${y + 4}`] = true; // 4x4 <-
+            walls[`${x + 4},${y + 8}`] = true; // 4x8
+            walls[`${x + 4},${y + 12}`] = true; // 4x12 <-
             // bottom wall
-            walls[`${x + 4},${y + 16}`] = true; // 4x16
-            walls[`${x + 8},${y + 16}`] = true; // 8x16
-            walls[`${x + 12},${y + 16}`] = true; // 12x16
-            walls[`${x + 16},${y + 16}`] = true; // 16x16 <-
+            walls[`${x + 8},${y + 12}`] = true; // 12x12
+            walls[`${x + 12},${y + 12}`] = true; // 12x12 <-
             // right wall
-            walls[`${x + 16},${y + 12}`] = true; // 16x12
-            walls[`${x + 16},${y + 8}`] = true; // 16x8
-            walls[`${x + 16},${y + 4}`] = true; // 16x4
-            walls[`${x + 16},${y}`] = true; // 16x0 <-
+            walls[`${x + 12},${y + 8}`] = true; // 12x8
+            walls[`${x + 12},${y + 4}`] = true; // 12x4 <-
             // top wall
-            walls[`${x + 12},${y}`] = true; // 12x0
-            walls[`${x + 8},${y}`] = true; // 8x0
-            walls[`${x + 4},${y}`] = true; // 4x0
+            walls[`${x + 8},${y + 4}`] = true; // 12x0
         });
     }
 };
