@@ -4,8 +4,6 @@ class Protagonist extends GameObject {
         super(config);
         this.movingProgressRemaining = 0;
         this.isPlayerControlled = config.isPlayerControlled;
-        this.width = config.width;
-        this.height = config.height;
         // prettier-ignore
         this.directionUpdate = {
             "up": [["y", -1]],

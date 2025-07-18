@@ -36,6 +36,19 @@ class OverWorldMap {
     ctx.drawImage(this.upperImage, utils.withGrid(10.5) - cameraPerson.x, utils.withGrid(6) - cameraPerson.y)
   }
 
+  drawCollisionPoints(ctx: CanvasRenderingContext2D, cameraPerson: GameObject) {
+    Object.keys(this.walls).forEach((wall) => {
+      let coord = wall.split(",")
+      // console.log(coord)
+      let x = Number(coord[0]) - cameraPerson.x + utils.withGrid(10.5)
+      let y = Number(coord[1]) - cameraPerson.y + utils.withGrid(6)
+      ctx.beginPath()
+      ctx.arc(x, y, 1, 0, 2 * Math.PI) // (x, y, radius, startAngle, endAngle)
+      ctx.fillStyle = "red" // Fill color
+      ctx.fill() // Fill the circle
+    })
+  }
+
   // mountObjects() {
   //   Object.values(this.gameObjects).forEach((object) => {
   //     // TODO, determine if this element should really mount
@@ -44,13 +57,31 @@ class OverWorldMap {
   // }
 
   mountMapWalls() {
-    utils.createMapWalls([[42, 26]], this.walls)
-    // utils.createMapWalls([[42,26],[43,23],[44,23],[35,23],[36,23],[37,23]], this.walls)
+    for (let y = 0; y < collisionData.length; y++) {
+      for (let x = 0; x < collisionData[0].length; x++) {
+        if (collisionData[y][x] === 1) {
+          utils.createMapWalls([[x, y]], this.walls)
+        }
+      }
+    }
   }
 
   isSpaceTaken(currentX: number, currentY: number, direction: string) {
-    const {x, y} = utils.nextPosition(currentX, currentY, direction)
-    return this.walls[`${x},${y}`] || false
+    const positions = utils.nextPosition(currentX, currentY, direction)
+    if (!positions) {
+      return false
+    }
+    const [pos1, pos2, pos3] = positions
+    if (pos3) {
+      return (
+        this.walls[`${pos1[0]},${pos1[1]}`] ||
+        this.walls[`${pos2[0]},${pos2[1]}`] ||
+        this.walls[`${pos3[0]},${pos3[1]}`] ||
+        false
+      )
+    } else {
+      return this.walls[`${pos1[0]},${pos1[1]}`] || this.walls[`${pos2[0]},${pos2[1]}`] || false
+    }
   }
 
   // walls functions, add, remove and move
@@ -62,9 +93,32 @@ class OverWorldMap {
     delete this.walls[`${x},${y}`]
   }
 
-  moveWall(wasX: number, wasY: number, direction: string) {
-    this.removeWall(wasX, wasY)
-    const {x, y} = utils.nextPosition(wasX, wasY, direction)
-    this.addWall(x, y)
-  }
+  // moveWall(wasX: number, wasY: number, direction: string) {
+  //   this.removeWall(wasX, wasY)
+  //   const {x, y} = utils.nextPosition(wasX, wasY, direction)
+  //   this.addWall(x, y)
+  // }
 }
+
+const collisionData = [
+  [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+  [0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0],
+  [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1],
+  [0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0],
+  [0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1],
+  [0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0],
+  [0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0],
+  [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+]

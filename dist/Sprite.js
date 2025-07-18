@@ -87,15 +87,23 @@ class Sprite {
         }
     }
     draw(ctx, cameraPerson) {
-        const x = this.gameObject.x - 24 + utils.withGrid(10.5) - cameraPerson.x;
-        const y = this.gameObject.y - 29 + utils.withGrid(6) - cameraPerson.y;
+        let x = 0;
+        let y = 0;
+        if (this.tileSize === 48) {
+            x = this.gameObject.x - 17 + utils.withGrid(10.5) - cameraPerson.x;
+            y = this.gameObject.y - 36 + utils.withGrid(6.5) - cameraPerson.y;
+        }
+        else {
+            x = this.gameObject.x - 8 + utils.withGrid(10.5) - cameraPerson.x;
+            y = this.gameObject.y - 18 + utils.withGrid(6.5) - cameraPerson.y;
+        }
         this.isShadowLoaded &&
             ctx.drawImage(this.shadow, // image element
             x + 8, // destination x
             y + 12 // destination y
             );
         const [frameX, frameY] = this.frame;
-        this.isLoaded &&
+        if (this.isLoaded) {
             ctx.drawImage(this.image, // image element
             frameX * this.tileSize, // left cut
             frameY * this.tileSize, // top cut
@@ -106,6 +114,24 @@ class Sprite {
             this.tileSize, // destination width
             this.tileSize // destination height
             );
+            // HITBOX
+            if (this.tileSize === 48) {
+                //  hitBox debugging
+                ctx.strokeStyle = "red"; // Set border color
+                ctx.lineWidth = 2; // Optional: set border thickness
+                ctx.strokeRect(x + 17, y + 28, this.gameObject.width, this.gameObject.height); // (x, y, width, height)
+                // ctx.beginPath()
+                // ctx.arc(x + 17, y + 28, 1, 0, 2 * Math.PI) // (x, y, radius, startAngle, endAngle)
+                // ctx.fillStyle = "red" // Fill color
+                // ctx.fill() // Fill the circle
+            }
+            else {
+                //  hitBox debugging
+                ctx.strokeStyle = "red"; // Set border color
+                ctx.lineWidth = 2; // Optional: set border thickness
+                ctx.strokeRect(x + 6, y + 10, this.gameObject.width, this.gameObject.height); // (x, y, width, height)
+            }
+        }
         this.updateAnimationProgress();
     }
 }

@@ -6,6 +6,8 @@ interface GameObjectConfig {
   direction?: string
   tileSize: number
   useShadow: boolean
+  width: number
+  height: number
 }
 
 class GameObject {
@@ -14,12 +16,16 @@ class GameObject {
   sprite: Sprite
   direction: string
   isMounted: boolean
+  width: number
+  height: number
 
   constructor(config: GameObjectConfig) {
     this.isMounted = false
     this.x = config.x || 0
     this.y = config.y || 0
     this.direction = config.direction || "down"
+    this.width = config.width
+    this.height = config.height
     this.sprite = new Sprite({
       gameObject: this,
       src: config.src,

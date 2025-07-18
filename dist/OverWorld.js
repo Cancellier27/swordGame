@@ -59,26 +59,28 @@ class OverWorld {
         });
         // Draw UPPER tiles layer
         this.map.drawUpperImage(this.ctx, cameraPerson);
+        // draw collision walls for debbuging
+        this.map.drawCollisionPoints(this.ctx, cameraPerson);
     }
     init() {
         this.map = new OverWorldMap({
-            lowerSrc: "../images/maps/BosqueLower.png",
-            upperSrc: "../images/maps/BosqueUpper.png",
+            lowerSrc: "../images/maps/TestMap_lower.png",
+            upperSrc: "../images/maps/TestMap_upper.png",
             gameObjects: {
                 hero: new Protagonist({
-                    x: utils.withGrid(45),
-                    y: utils.withGrid(24),
+                    x: utils.withGrid(3),
+                    y: utils.withGrid(8),
                     isPlayerControlled: true,
                     currentAnimation: "idle-down",
                     src: "../images/characters/people/player.png",
                     tileSize: 48,
                     useShadow: true,
-                    width: 15,
-                    height: 21
+                    width: 16,
+                    height: 16
                 }),
                 slime: new NPC({
-                    x: utils.withGrid(40),
-                    y: utils.withGrid(22),
+                    x: utils.withGrid(10),
+                    y: utils.withGrid(14),
                     isPlayerControlled: true,
                     currentAnimation: "walk-up",
                     src: "../images/characters/people/slime.png",
