@@ -151,21 +151,21 @@ class Sprite {
       )
 
       // HITBOX
-      if (this.tileSize === 48) {
-        //  hitBox debugging
-        ctx.strokeStyle = "red" // Set border color
-        ctx.lineWidth = 2 // Optional: set border thickness
-        ctx.strokeRect(x + 17, y + 28, this.gameObject.width, this.gameObject.height) // (x, y, width, height)
-        // ctx.beginPath()
-        // ctx.arc(x + 17, y + 28, 1, 0, 2 * Math.PI) // (x, y, radius, startAngle, endAngle)
-        // ctx.fillStyle = "red" // Fill color
-        // ctx.fill() // Fill the circle
-      } else {
-        //  hitBox debugging
-        ctx.strokeStyle = "red" // Set border color
-        ctx.lineWidth = 2 // Optional: set border thickness
-        ctx.strokeRect(x + 6, y + 10, this.gameObject.width, this.gameObject.height) // (x, y, width, height)
-      }
+      // if (this.tileSize === 48) {
+      //   //  hitBox debugging
+      //   ctx.strokeStyle = "red" // Set border color
+      //   ctx.lineWidth = 2 // Optional: set border thickness
+      //   ctx.strokeRect(x + 17, y + 28, this.gameObject.width, this.gameObject.height) // (x, y, width, height)
+      //   // ctx.beginPath()
+      //   // ctx.arc(x + 17, y + 28, 1, 0, 2 * Math.PI) // (x, y, radius, startAngle, endAngle)
+      //   // ctx.fillStyle = "red" // Fill color
+      //   // ctx.fill() // Fill the circle
+      // } else {
+      //   //  hitBox debugging
+      //   ctx.strokeStyle = "red" // Set border color
+      //   ctx.lineWidth = 2 // Optional: set border thickness
+      //   ctx.strokeRect(x + 6, y + 10, this.gameObject.width, this.gameObject.height) // (x, y, width, height)
+      // }
 
     }
 

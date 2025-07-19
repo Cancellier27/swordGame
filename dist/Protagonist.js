@@ -70,7 +70,7 @@ class Protagonist extends GameObject {
                 }
             }
             // set a wall onto the next space here will be
-            // state.map.moveWall(this.x, this.y, this.direction)
+            state.map.moveWall(this.x, this.y, this.direction);
             // keep walking!
             this.movingProgressRemaining = 4;
         }

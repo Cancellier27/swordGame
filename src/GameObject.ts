@@ -38,7 +38,7 @@ class GameObject {
   // mount wall
   mount(map: OverWorldMap) {
     this.isMounted = true
-    map.addWall(this.x, this.y)
+    map.addWall(this.x / 16, this.y / 16)
   }
 
   update(state: {arrow: string; map: OverWorldMap}) {}

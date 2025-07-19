@@ -39,6 +39,8 @@ class NPC extends GameObject {
                 // if space is taken ahead, return and do not move
                 return;
             }
+            // mount wall
+            state.map.moveWall(this.x, this.y, this.direction);
             // keep walking!
             this.movingProgressRemaining = 4;
         }

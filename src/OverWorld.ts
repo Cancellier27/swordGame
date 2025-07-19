@@ -94,7 +94,7 @@ class OverWorld {
       gameObjects: {
         hero: new Protagonist({
           x: utils.withGrid(4),
-          y: utils.withGrid(9),
+          y: utils.withGrid(17),
           isPlayerControlled: true,
           currentAnimation: "idle-down",
           src: "../images/characters/people/player.png",
@@ -104,8 +104,8 @@ class OverWorld {
           height: 16
         }),
         slime: new NPC({
-          x: utils.withGrid(10),
-          y: utils.withGrid(14),
+          x: utils.withGrid(14),
+          y: utils.withGrid(18),
           isPlayerControlled: true,
           currentAnimation: "walk-up",
           src: "../images/characters/people/slime.png",
@@ -118,14 +118,10 @@ class OverWorld {
       // walls that player can collide with
       walls: {
         // [utils.asGridCoord(42, 26)]: true,
-        // [utils.asGridCoord(43, 23)]: true,
-        // [utils.asGridCoord(44, 23)]: true,
-        // [utils.asGridCoord(35, 23)]: true,
-        // [utils.asGridCoord(36, 23)]: true,
-        // [utils.asGridCoord(37, 23)]: true
       }
     })
-    // this.map.mountObjects()
+    // mount objects walls
+    this.map.mountObjects()
 
     // create and initializes the class DirectionInput to listen to keyboard press
     this.directionInput = new DirectionInputs()

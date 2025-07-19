@@ -55,6 +55,8 @@ class NPC extends GameObject {
         return
       }
 
+      // mount wall
+      state.map.moveWall(this.x, this.y, this.direction)
       // keep walking!
       this.movingProgressRemaining = 4
     }

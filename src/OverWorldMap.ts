@@ -25,7 +25,7 @@ class OverWorldMap {
     this.upperImage = new Image()
     this.upperImage.src = config.upperSrc
 
-    this.mountMapWalls()
+    this.mountMapWalls(collisionDataTestMap)
   }
 
   drawLowerImage(ctx: CanvasRenderingContext2D, cameraPerson: GameObject) {
@@ -49,18 +49,19 @@ class OverWorldMap {
     })
   }
 
-  // mountObjects() {
-  //   Object.values(this.gameObjects).forEach((object) => {
-  //     // TODO, determine if this element should really mount
-  //     object.mount(this)
-  //   })
-  // }
+  mountObjects() {
+    Object.values(this.gameObjects).forEach((object) => {
+      console.log("mounting")
+      // TODO, determine if this element should really mount
+      object.mount(this)
+    })
+  }
 
-  mountMapWalls() {
+  mountMapWalls(collisionData: number[][]) {
     for (let y = 0; y < collisionData.length; y++) {
       for (let x = 0; x < collisionData[0].length; x++) {
         if (collisionData[y][x] === 1) {
-          utils.createMapWalls([[x, y]], this.walls)
+          utils.createMapWalls([x, y], this.walls)
         }
       }
     }
@@ -92,22 +93,27 @@ class OverWorldMap {
   }
 
   // walls functions, add, remove and move
+  // NOT multiplied by 16
   addWall(x: number, y: number) {
-    this.walls[`${x},${y}`] = true
+    utils.createMapWalls([x, y], this.walls)
   }
 
+  // NOT multiplied by 16
   removeWall(x: number, y: number) {
-    delete this.walls[`${x},${y}`]
+    utils.removeMapWalls([x, y], this.walls)
   }
 
-  // moveWall(wasX: number, wasY: number, direction: string) {
-  //   this.removeWall(wasX, wasY)
-  //   const {x, y} = utils.nextPosition(wasX, wasY, direction)
-  //   this.addWall(x, y)
-  // }
+  // TO BE multiplied by 16
+  moveWall(wasX: number, wasY: number, direction: string) {
+    // compensate the grid by dividing by 16
+    this.removeWall(wasX / 16, wasY / 16)
+    const {topLX, topLY} = utils.nextPositionOrigin(wasX, wasY, direction)
+    // compensate the grid by dividing by 16
+    this.addWall(topLX / 16, topLY / 16)
+  }
 }
 
-const collisionData = [
+const collisionDataTestMap = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],

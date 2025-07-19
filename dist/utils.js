@@ -75,22 +75,74 @@ const utils = {
             return [[topRX, topRY], [botRX, botRY], [topLX, topLY], [topRX - 8, topRY], [topRX, topRY + 8]];
         }
     },
+    nextPositionOrigin(initialX, initialY, direction) {
+        let topLX = initialX;
+        let topLY = initialY;
+        const size = 4;
+        if (direction === "left") {
+            topLX -= size;
+        }
+        else if (direction === "right") {
+            topLX += size;
+        }
+        else if (direction === "up") {
+            topLY -= size;
+        }
+        else if (direction === "down") {
+            topLY += size;
+        }
+        else if (direction === "left-up" || direction === "up-left") {
+            topLX -= size;
+            topLY -= size;
+        }
+        else if (direction === "left-down" || direction === "down-left") {
+            topLX -= size;
+            topLY += size;
+        }
+        else if (direction === "right-down" || direction === "down-right") {
+            topLX += size;
+            topLY += size;
+        }
+        else if (direction === "right-up" || direction === "up-right") {
+            topLX += size;
+            topLY -= size;
+        }
+        return { topLX, topLY };
+    },
     createMapWalls(wallsArr, walls) {
-        wallsArr.forEach((wall) => {
-            let x = wall[0] * 16; //tile X
-            let y = wall[1] * 16; //tile Y
-            // left wall
-            walls[`${x + 4},${y + 4}`] = true; // 4x4 <-
-            walls[`${x + 4},${y + 8}`] = true; // 4x8
-            walls[`${x + 4},${y + 12}`] = true; // 4x12 <-
-            // bottom wall
-            walls[`${x + 8},${y + 12}`] = true; // 12x12
-            walls[`${x + 12},${y + 12}`] = true; // 12x12 <-
-            // right wall
-            walls[`${x + 12},${y + 8}`] = true; // 12x8
-            walls[`${x + 12},${y + 4}`] = true; // 12x4 <-
-            // top wall
-            walls[`${x + 8},${y + 4}`] = true; // 12x0
-        });
+        // wallsArr.forEach((wall: number[]) => {
+        let x = wallsArr[0] * 16; //tile X
+        let y = wallsArr[1] * 16; //tile Y
+        // left wall
+        walls[`${x + 4},${y + 4}`] = true; // 4x4 <-
+        walls[`${x + 4},${y + 8}`] = true; // 4x8
+        walls[`${x + 4},${y + 12}`] = true; // 4x12 <-
+        // bottom wall
+        walls[`${x + 8},${y + 12}`] = true; // 12x12
+        walls[`${x + 12},${y + 12}`] = true; // 12x12 <-
+        // right wall
+        walls[`${x + 12},${y + 8}`] = true; // 12x8
+        walls[`${x + 12},${y + 4}`] = true; // 12x4 <-
+        // top wall
+        walls[`${x + 8},${y + 4}`] = true; // 12x0
+        // })
+    },
+    removeMapWalls(wallsArr, walls) {
+        // wallsArr.forEach((wall: number[]) => {
+        let x = wallsArr[0] * 16; //tile X
+        let y = wallsArr[1] * 16; //tile Y
+        // left wall
+        delete walls[`${x + 4},${y + 4}`]; // 4x4 <-
+        delete walls[`${x + 4},${y + 8}`]; // 4x8
+        delete walls[`${x + 4},${y + 12}`]; // 4x12 <-
+        // bottom wall
+        delete walls[`${x + 8},${y + 12}`]; // 12x12
+        delete walls[`${x + 12},${y + 12}`]; // 12x12 <-
+        // right wall
+        delete walls[`${x + 12},${y + 8}`]; // 12x8
+        delete walls[`${x + 12},${y + 4}`]; // 12x4 <-
+        // top wall
+        delete walls[`${x + 8},${y + 4}`]; // 12x0
+        // })
     }
 };
