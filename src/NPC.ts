@@ -12,7 +12,7 @@ class NPC extends GameObject {
     super(config)
     this.movingProgressRemaining = 0
 
-    this.npcDirection = "walk-up"
+    this.npcDirection = config.currentAnimation
 
     this.isPlayerControlled = config.isPlayerControlled
 

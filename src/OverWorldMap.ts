@@ -50,8 +50,12 @@ class OverWorldMap {
   }
 
   mountObjects() {
-    Object.values(this.gameObjects).forEach((object) => {
-      console.log("mounting")
+    Object.keys(this.gameObjects).forEach((key) => {
+
+      let object = this.gameObjects[key]
+      // set the id for each character automatically
+      object.id = key
+      
       // TODO, determine if this element should really mount
       object.mount(this)
     })

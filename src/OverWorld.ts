@@ -83,43 +83,12 @@ class OverWorld {
     // Draw UPPER tiles layer
     this.map.drawUpperImage(this.ctx, cameraPerson)
 
-    // draw collision walls for debbuging
-    this.map.drawCollisionPoints(this.ctx, cameraPerson)
+    // COLLISION WALLS FOR DEBUGGING
+    // this.map.drawCollisionPoints(this.ctx, cameraPerson)
   }
 
   init() {
-    this.map = new OverWorldMap({
-      lowerSrc: "../images/maps/TestMap_lower.png",
-      upperSrc: "../images/maps/TestMap_upper.png",
-      gameObjects: {
-        hero: new Protagonist({
-          x: utils.withGrid(4),
-          y: utils.withGrid(17),
-          isPlayerControlled: true,
-          currentAnimation: "idle-down",
-          src: "../images/characters/people/player.png",
-          tileSize: 48,
-          useShadow: true,
-          width: 16,
-          height: 16
-        }),
-        slime: new NPC({
-          x: utils.withGrid(14),
-          y: utils.withGrid(18),
-          isPlayerControlled: true,
-          currentAnimation: "walk-up",
-          src: "../images/characters/people/slime.png",
-          tileSize: 32,
-          useShadow: false,
-          width: 20,
-          height: 12
-        })
-      },
-      // walls that player can collide with
-      walls: {
-        // [utils.asGridCoord(42, 26)]: true,
-      }
-    })
+    this.map = new OverWorldMap(TestMap)
     // mount objects walls
     this.map.mountObjects()
 
