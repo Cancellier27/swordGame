@@ -10,6 +10,8 @@ class OverWorldMap {
         // lower the upper image of the map
         this.upperImage = new Image();
         this.upperImage.src = config.upperSrc;
+        this.isCutscenePlaying = false;
+        // mount map walls
         this.mountMapWalls(collisionDataTestMap);
     }
     drawLowerImage(ctx, cameraPerson) {

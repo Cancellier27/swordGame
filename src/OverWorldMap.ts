@@ -10,6 +10,7 @@ class OverWorldMap {
   upperImage: HTMLImageElement
   gameObjects: {[key: string]: GameObject}
   walls: {[key: string]: boolean}
+  isCutscenePlaying: boolean
 
   constructor(config: OverWorldMapConfig) {
     // references the gameObjects to be used here
@@ -25,6 +26,9 @@ class OverWorldMap {
     this.upperImage = new Image()
     this.upperImage.src = config.upperSrc
 
+    this.isCutscenePlaying = false
+
+    // mount map walls
     this.mountMapWalls(collisionDataTestMap)
   }
 
@@ -55,7 +59,6 @@ class OverWorldMap {
       let object = this.gameObjects[key]
       // set the id for each character automatically
       object.id = key
-      
       // TODO, determine if this element should really mount
       object.mount(this)
     })

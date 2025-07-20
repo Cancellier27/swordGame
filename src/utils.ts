@@ -131,5 +131,12 @@ const utils = {
     // top wall
     delete walls[`${x + 8},${y + 4}`] // 12x0
     // })
+  },
+  emitEvent(name: string, detail: any) {
+        const event = new CustomEvent(name, {
+        detail
+      })
+
+      document.dispatchEvent(event)
   }
 }

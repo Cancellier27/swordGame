@@ -6,13 +6,13 @@ class NPC extends GameObject {
   movingProgressRemaining: number
   directionUpdate: {[key: string]: [string, number][]}
   isPlayerControlled: boolean
-  npcDirection: string
+  direction: string
 
   constructor(config: ProtagonistConfig) {
     super(config)
     this.movingProgressRemaining = 0
 
-    this.npcDirection = config.currentAnimation
+    this.direction = config.currentAnimation
 
     this.isPlayerControlled = config.isPlayerControlled
 
@@ -45,7 +45,7 @@ class NPC extends GameObject {
     }
   }
 
-  startBehavior(state: {arrow: string; map: OverWorldMap}, behavior: {[keu: string]: string}) {
+  startBehavior(state: {arrow: string; map: OverWorldMap}, behavior: {[keu: string]: string}, movingProgress: number) {
     // set the character to walk or do some behavior
     this.direction = behavior.direction
 
@@ -59,39 +59,45 @@ class NPC extends GameObject {
       state.map.moveWall(this.x, this.y, this.direction)
       // keep walking!
       this.movingProgressRemaining = 4
+      this.updateSprite()
     }
   }
 
   // update player position and movingProgressRemaining
   updatePosition(): void {
-    if (this.movingProgressRemaining > 0) {
-      // get the this.direction from the extended obj GameObject to get the right directionUpdate value
-      if (this.directionUpdate[this.direction].length > 1) {
-        const [_x, changeX] = this.directionUpdate[this.direction][0]
-        const [_y, changeY] = this.directionUpdate[this.direction][1]
+    // get the this.direction from the extended obj GameObject to get the right directionUpdate value
+    if (this.directionUpdate[this.direction].length > 1) {
+      const [_x, changeX] = this.directionUpdate[this.direction][0]
+      const [_y, changeY] = this.directionUpdate[this.direction][1]
 
-        this.x += changeX
-        this.y += changeY
-      } else {
-        const [property, change] = this.directionUpdate[this.direction][0]
+      this.x += changeX
+      this.y += changeY
+    } else {
+      const [property, change] = this.directionUpdate[this.direction][0]
 
-        if (property === "x") {
-          ;(this as any).x += change
-        } else if (property === "y") {
-          ;(this as any).y += change
-        }
+      if (property === "x") {
+        ;(this as any).x += change
+      } else if (property === "y") {
+        ;(this as any).y += change
       }
+    }
 
-      this.movingProgressRemaining -= 1
+    this.movingProgressRemaining -= 1
+
+    if (this.movingProgressRemaining === 0) {
+      // finished walking here
+      utils.emitEvent("PersonWalkingComplete", {
+        whoId: this.id
+      })
     }
   }
 
   updateSprite() {
     if (this.movingProgressRemaining > 0) {
-      this.sprite.setAnimation(this.npcDirection)
+      this.sprite.setAnimation("walk-" + this.direction)
       return
     }
 
-    this.sprite.setAnimation(this.npcDirection)
+    this.sprite.setAnimation("idle-" + this.direction)
   }
 }

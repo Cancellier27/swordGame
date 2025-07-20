@@ -50,16 +50,44 @@ class GameObject {
     map.addWall(this.x / 16, this.y / 16)
 
     // if we have a behavior, kick off after a short delay
-
+    setTimeout(() => {
+      this.doBehaviorEvent(map)
+    }, 10)
   }
 
   update(state: {arrow: string; map: OverWorldMap}) {}
+  startBehavior(state: {arrow: string; map: OverWorldMap}, behavior: {[keu: string]: string}, movingProgress: number) {}
 
-  doBehaviorEvent(map: OverWorldMap) {
+  //  do not do anything is there is no behavior loop
+  async doBehaviorEvent(map: OverWorldMap) {
+    if (map.isCutscenePlaying || this.behaviorLoop.length === 0) {
+      return
+    }
+
     // check what behavior we are on
-    let event = this.behaviorLoop[this.behaviorLoopIndex]
+    let eventConfig = this.behaviorLoop[this.behaviorLoopIndex]
     eventConfig.who = this.id
 
-    const eventHandlet = new OverWorldEvent({map, event: eventConfig})
+    // create an event instance of our event config
+    if (eventConfig.type === "walk") {
+      // create for instances of walking to compensate the 16x16 grid used, as the character only walks 4 pixel per frame.
+      for (let i = 0; i < 4; i++) {
+        const eventHandler = new OverWorldEvent({map, event: eventConfig})
+        await eventHandler.init()
+      }
+    } else {
+      const eventHandler = new OverWorldEvent({map, event: eventConfig})
+      await eventHandler.init()
+    }
+
+    // go to the next loop
+    this.behaviorLoopIndex += 1
+    // reset the behavior loop
+    if (this.behaviorLoopIndex === this.behaviorLoop.length) {
+      this.behaviorLoopIndex = 0
+    }
+
+    // do it again!
+    this.doBehaviorEvent(map)
   }
 }

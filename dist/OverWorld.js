@@ -60,7 +60,7 @@ class OverWorld {
         // Draw UPPER tiles layer
         this.map.drawUpperImage(this.ctx, cameraPerson);
         // COLLISION WALLS FOR DEBUGGING
-        // this.map.drawCollisionPoints(this.ctx, cameraPerson)
+        this.map.drawCollisionPoints(this.ctx, cameraPerson);
     }
     init() {
         this.map = new OverWorldMap(TestMap);
