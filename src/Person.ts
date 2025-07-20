@@ -1,15 +1,18 @@
-interface ProtagonistConfig extends GameObjectConfig {
+interface PersonConfig extends GameObjectConfig {
   isPlayerControlled: boolean
 }
 
-class Protagonist extends GameObject {
+class Person extends GameObject {
   movingProgressRemaining: number
   directionUpdate: {[key: string]: [string, number][]}
   isPlayerControlled: boolean
+  // direction: string
 
-  constructor(config: ProtagonistConfig) {
+  constructor(config: PersonConfig) {
     super(config)
     this.movingProgressRemaining = 0
+
+    // this.direction = config.currentAnimation
 
     this.isPlayerControlled = config.isPlayerControlled
 
@@ -38,17 +41,27 @@ class Protagonist extends GameObject {
 
       // arrow comes from the direction input event listener defined in overWorld gameLoop.
       // if not player, it won't move
-      if (this.isPlayerControlled && state.arrow) {
+      if (this.isPlayerControlled && state.arrow && this.id) {
         this.startBehavior(state, {
           type: "walk",
-          direction: state.arrow
+          direction: state.arrow,
+          who: this.id
         })
       }
       this.updateSprite()
     }
   }
 
-  startBehavior(state: {arrow: string; map: OverWorldMap}, behavior: {[keu: string]: string}) {
+  startBehavior(
+    state: {arrow: string; map: OverWorldMap},
+    behavior: {
+      type: string
+      direction: string
+      time?: number
+      who: string
+      retry?: boolean
+    }
+  ) {
     // set the character to walk or do some behavior
     this.direction = behavior.direction
 
@@ -75,6 +88,12 @@ class Protagonist extends GameObject {
             return
           }
         } else {
+          // if you have a retry flag on, please retry the behavior here
+          behavior.retry &&
+            setTimeout(() => {
+              this.startBehavior(state, behavior)
+            }, 100)
+
           // if space is taken ahead, return and do not move
           return
         }
@@ -83,6 +102,15 @@ class Protagonist extends GameObject {
       state.map.moveWall(this.x, this.y, this.direction)
       // keep walking!
       this.movingProgressRemaining = 4
+      this.updateSprite()
+    }
+
+    if (behavior.type === "stand") {
+      setTimeout(() => {
+        utils.emitEvent("PersonStandComplete", {
+          whoId: this.id
+        })
+      }, behavior.time)
     }
   }
 
@@ -106,6 +134,13 @@ class Protagonist extends GameObject {
     }
 
     this.movingProgressRemaining -= 1
+
+    if (this.movingProgressRemaining === 0) {
+      // finished walking here
+      utils.emitEvent("PersonWalkingComplete", {
+        whoId: this.id
+      })
+    }
   }
 
   updateSprite() {

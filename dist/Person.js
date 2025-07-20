@@ -30,10 +30,11 @@ class Person extends GameObject {
             // more cases to start to walk wil come here
             // arrow comes from the direction input event listener defined in overWorld gameLoop.
             // if not player, it won't move
-            if (this.isPlayerControlled && state.arrow) {
+            if (this.isPlayerControlled && state.arrow && this.id) {
                 this.startBehavior(state, {
                     type: "walk",
-                    direction: state.arrow
+                    direction: state.arrow,
+                    who: this.id
                 });
             }
             this.updateSprite();
@@ -67,6 +68,11 @@ class Person extends GameObject {
                     }
                 }
                 else {
+                    // if you have a retry flag on, please retry the behavior here
+                    behavior.retry &&
+                        setTimeout(() => {
+                            this.startBehavior(state, behavior);
+                        }, 100);
                     // if space is taken ahead, return and do not move
                     return;
                 }
@@ -82,7 +88,7 @@ class Person extends GameObject {
                 utils.emitEvent("PersonStandComplete", {
                     whoId: this.id
                 });
-            }, Number(behavior.time));
+            }, behavior.time);
         }
     }
     // update player position and movingProgressRemaining

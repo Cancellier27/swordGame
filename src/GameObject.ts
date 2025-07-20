@@ -3,7 +3,7 @@ interface GameObjectConfig {
   y: number
   src: string
   currentAnimation: string
-  direction?: string
+  direction: string
   tileSize: number
   useShadow: boolean
   width: number
@@ -19,7 +19,6 @@ class GameObject {
   width: number
   height: number
   id: null | string
-  currentAnimation: string
   behaviorLoop: any[]
   behaviorLoopIndex: number
 
@@ -28,14 +27,14 @@ class GameObject {
     this.isMounted = false
     this.x = config.x || 0
     this.y = config.y || 0
-    this.direction = config.direction || "down"
+    this.direction = config.direction
     this.width = config.width
     this.height = config.height
-    this.currentAnimation = config.currentAnimation
+    this.direction = config.direction
     this.sprite = new Sprite({
       gameObject: this,
       src: config.src,
-      currentAnimation: this.currentAnimation,
+      currentAnimation: config.currentAnimation,
       tileSize: config.tileSize,
       useShadow: config.useShadow
     })
@@ -56,7 +55,16 @@ class GameObject {
   }
 
   update(state: {arrow: string; map: OverWorldMap}) {}
-  startBehavior(state: {arrow: string; map: OverWorldMap}, behavior: {[keu: string]: string}, movingProgress: number) {}
+  startBehavior(
+    state: {arrow: string; map: OverWorldMap},
+    behavior: {
+    type: string
+    direction: string
+    time?: number
+    who?: string
+    retry?: boolean
+  }
+  ) {}
 
   //  do not do anything is there is no behavior loop
   async doBehaviorEvent(map: OverWorldMap) {

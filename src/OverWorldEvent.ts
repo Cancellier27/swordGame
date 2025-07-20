@@ -5,6 +5,7 @@ interface OverWorldEventConfig {
     direction: string
     time?: number
     who: string
+    retry?: boolean
   }
 }
 
@@ -14,7 +15,8 @@ class OverWorldEvent {
     type: string
     direction: string
     time?: number
-    who: string
+    who?: string
+    retry?: boolean
   }
 
   constructor(config: OverWorldEventConfig) {
@@ -23,33 +25,59 @@ class OverWorldEvent {
   }
 
   stand(resolve: () => void) {
-    // Implement stand logic here
-    resolve()
-  }
-
-  walk(resolve: () => void) {
-    const who = this.map.gameObjects[this.event.who]
-    who.startBehavior(
-      {
-        map: this.map,
-        arrow: this.event.direction
-      },
-      {
-        type: "walk",
-        direction: this.event.direction
-      },
-      16
-    )
+    if (this.event.who) {
+      const who = this.map.gameObjects[this.event.who]
+      who.startBehavior(
+        {
+          map: this.map,
+          arrow: this.event.direction
+        },
+        {
+          type: "stand",
+          direction: this.event.direction,
+          time: this.event.time,
+          who: this.event.who
+        }
+      )
+    }
 
     const completeHandler = (e: Event) => {
       const customEvent = e as CustomEvent<{whoId: string}>
       if (customEvent.detail.whoId === this.event.who) {
-        document.removeEventListener("PersonWalkingComplete", completeHandler)
+        document.removeEventListener("PersonStandComplete", completeHandler)
         resolve()
       }
     }
 
-    document.addEventListener("PersonWalkingComplete", completeHandler)
+    document.addEventListener("PersonStandComplete", completeHandler)
+  }
+
+  walk(resolve: () => void) {
+    if (this.event.who) {
+      const who = this.map.gameObjects[this.event.who]
+      who.startBehavior(
+        {
+          map: this.map,
+          arrow: this.event.direction
+        },
+        {
+          type: "walk",
+          direction: this.event.direction,
+          who: this.event.who,
+          retry: true
+        }
+      )
+
+      const completeHandler = (e: Event) => {
+        const customEvent = e as CustomEvent<{whoId: string}>
+        if (customEvent.detail.whoId === this.event.who) {
+          document.removeEventListener("PersonWalkingComplete", completeHandler)
+          resolve()
+        }
+      }
+
+      document.addEventListener("PersonWalkingComplete", completeHandler)
+    }
   }
 
   init() {

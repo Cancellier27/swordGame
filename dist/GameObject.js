@@ -14,14 +14,14 @@ class GameObject {
         this.isMounted = false;
         this.x = config.x || 0;
         this.y = config.y || 0;
-        this.direction = config.direction || "down";
+        this.direction = config.direction;
         this.width = config.width;
         this.height = config.height;
-        this.currentAnimation = config.currentAnimation;
+        this.direction = config.direction;
         this.sprite = new Sprite({
             gameObject: this,
             src: config.src,
-            currentAnimation: this.currentAnimation,
+            currentAnimation: config.currentAnimation,
             tileSize: config.tileSize,
             useShadow: config.useShadow
         });
@@ -39,7 +39,7 @@ class GameObject {
         }, 10);
     }
     update(state) { }
-    startBehavior(state, behavior, movingProgress) { }
+    startBehavior(state, behavior) { }
     //  do not do anything is there is no behavior loop
     doBehaviorEvent(map) {
         return __awaiter(this, void 0, void 0, function* () {

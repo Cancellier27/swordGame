@@ -53,14 +53,18 @@ class OverWorld {
         });
         // Draw LOWER tiles layer
         this.map.drawLowerImage(this.ctx, cameraPerson);
-        // players and NPCs
-        Object.values(this.map.gameObjects).forEach((object) => {
+        // Draw players and NPCs using y value as order
+        Object.values(this.map.gameObjects)
+            .sort((a, b) => {
+            return a.y - b.y;
+        })
+            .forEach((object) => {
             object.sprite.draw(this.ctx, cameraPerson);
         });
         // Draw UPPER tiles layer
         this.map.drawUpperImage(this.ctx, cameraPerson);
         // COLLISION WALLS FOR DEBUGGING
-        this.map.drawCollisionPoints(this.ctx, cameraPerson);
+        // this.map.drawCollisionPoints(this.ctx, cameraPerson)
     }
     init() {
         this.map = new OverWorldMap(TestMap);
