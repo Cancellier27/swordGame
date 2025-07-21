@@ -17,6 +17,7 @@ class OverWorldEvent {
     time?: number
     who?: string
     retry?: boolean
+    text?: string
   }
 
   constructor(config: OverWorldEventConfig) {
@@ -77,6 +78,16 @@ class OverWorldEvent {
       }
 
       document.addEventListener("PersonWalkingComplete", completeHandler)
+    }
+  }
+
+  textMessage(resolve: () => void) {
+    if(this.event.text) {
+      const message = new TextMessage({
+        text: this.event.text,
+        onComplete: () => resolve()
+      })
+      message.init(document.querySelector(".game-container") as HTMLDivElement)
     }
   }
 

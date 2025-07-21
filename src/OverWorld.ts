@@ -104,13 +104,14 @@ class OverWorld {
     this.startGameLoop(60)
 
     this.map.startCutscene([
-      {who: "hero", type: "walk", direction: "right"},
-      {who: "hero", type: "walk", direction: "right"},
-      {who: "hero", type: "walk", direction: "right"},
-      {who: "hero", type: "walk", direction: "right"},
-      {who: "slime_1", type: "walk", direction: "right"},
-      {who: "slime_1", type: "walk", direction: "up"},
-      {who: "slime_1", type: "stand", direction: "left", time: 1000},
+      {type: "textMessage", text: "Hello There! how are you doing today aaa? Hello There! how are you doing today aaa?"},
+      // {who: "hero", type: "walk", direction: "right"},
+      // {who: "hero", type: "walk", direction: "right"},
+      // {who: "hero", type: "walk", direction: "right"},
+      // {who: "hero", type: "walk", direction: "right"},
+      // {who: "slime_1", type: "walk", direction: "right"},
+      // {who: "slime_1", type: "walk", direction: "up"},
+      // {who: "slime_1", type: "stand", direction: "left", time: 1000},
       
     ])
   }

@@ -19,11 +19,15 @@ class TextMessage {
     // create the element
     this.element = document.createElement("div")
     this.element.classList.add("TextMessage")
-
+    
     this.element.innerHTML = `
-          <p class="textMessage_p" >${this.text}</p>
-          <button class="textMessage_button >Next</button>
-        `
+    <p class="textMessage_p" >${this.text}</p>
+    <button class="TextMessage_button" > &gt;Next&lt; </button>
+    `
+
+    this.element.querySelector("button")?.addEventListener("click", () => {
+      // close text message
+    })
   }
 
   init(container: HTMLElement) {
