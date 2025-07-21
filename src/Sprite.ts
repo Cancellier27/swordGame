@@ -63,14 +63,14 @@ class Sprite {
       "walk-left-up": [[0, 7], [1, 7], [2, 7], [3, 7], [4, 7], [5, 7]],
       "walk-down-left": [[0, 7], [1, 7], [2, 7], [3, 7], [4, 7], [5, 7]],
       "walk-left-down": [[0, 7], [1, 7], [2, 7], [3, 7], [4, 7], [5, 7]],
-      // attacking
-      "attack-up": [[0, 8], [1, 8], [2, 8], [3, 8]],
-      "attack-down": [[0, 9], [1, 9], [2, 9], [3, 9]],
-      "attack-right": [[0, 10], [1, 10], [2, 10], [3, 10]],
-      "attack-left": [[0, 11], [1, 11], [2, 11], [3, 11]],
-      // dyeing
-      "die-right": [[0, 12], [1, 12], [2, 12], [3, 12], [3, 12]],
-      "die-left": [[0, 13], [1, 13], [2, 13], [3, 13], [3, 13]]
+      // // attacking
+      // "attack-up": [[0, 8], [1, 8], [2, 8], [3, 8]],
+      // "attack-down": [[0, 9], [1, 9], [2, 9], [3, 9]],
+      // "attack-right": [[0, 10], [1, 10], [2, 10], [3, 10]],
+      // "attack-left": [[0, 11], [1, 11], [2, 11], [3, 11]],
+      // // dyeing
+      // "die-right": [[0, 12], [1, 12], [2, 12], [3, 12], [3, 12]],
+      // "die-left": [[0, 13], [1, 13], [2, 13], [3, 13], [3, 13]]
     }
     // defines the starting animation frame if not stated
     this.currentAnimation = config.currentAnimation

@@ -49,6 +49,10 @@ class OverWorldEvent {
         }
     }
     textMessage(resolve) {
+        if (this.event.faceHero) {
+            const obj = this.map.gameObjects[this.event.faceHero];
+            obj.direction = utils.oppositeDirection(this.map.gameObjects["hero"].direction);
+        }
         if (this.event.text) {
             const message = new TextMessage({
                 text: this.event.text,
@@ -56,6 +60,13 @@ class OverWorldEvent {
             });
             message.init(document.querySelector(".game-container"));
         }
+    }
+    changeMap(resolve) {
+        var _a;
+        if (!this.event.map)
+            return;
+        (_a = this.map.overWorld) === null || _a === void 0 ? void 0 : _a.startMap(this.event.map);
+        resolve();
     }
     init() {
         return new Promise((resolve) => {

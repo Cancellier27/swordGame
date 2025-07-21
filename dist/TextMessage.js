@@ -15,7 +15,17 @@ class TextMessage {
     `;
         (_a = this.element.querySelector("button")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
             // close text message
+            this.done();
         });
+        this.actionListener = new KeyPressListener("Enter", () => {
+            // unbind the enter button
+            this.actionListener.unbind();
+            this.done();
+        });
+    }
+    done() {
+        this.element.remove();
+        this.onComplete();
     }
     init(container) {
         this.createElement();

@@ -5,6 +5,29 @@ const utils = {
   asGridCoord(x: number, y: number) {
     return `${x * 4},${y * 4}`
   },
+  inlinePoints(initialX: number, initialY: number, endX: number = initialX, endY: number = initialY) {
+    if (initialX !== endX) {
+      return `${initialX}x${initialY},${endX + 1}x${endY}`
+    } else if (initialY !== endY) {
+      return `${initialX}x${initialY},${endX}x${endY + 1}`
+    } else {
+      return `${initialX}x${initialY},${endX}x${endY}`
+    }
+  },
+  getInlinePoints(inlinePoints: string) {
+    const firstPointX = Number(inlinePoints.split(",")[0].split("x")[0]) * 16
+    const firstPointY = Number(inlinePoints.split(",")[0].split("x")[1]) * 16
+    const endPointX = Number(inlinePoints.split(",")[1].split("x")[0]) * 16
+    const endPointY = Number(inlinePoints.split(",")[1].split("x")[1]) * 16
+
+    if (firstPointX !== endPointX) {
+      return {start: firstPointX, end: endPointX, level: firstPointY, axis: "x"}
+    } else if (firstPointY !== endPointY) {
+      return {start: firstPointY, end: endPointY, level: firstPointX, axis: "y"}
+    } else {
+      return {start: firstPointX, end: endPointX + 12, level: firstPointY, axis: "x"}
+    }
+  },
   nextPosition(initialX: number, initialY: number, direction: string) {
     let topLX = initialX
     let topLY = initialY
@@ -68,31 +91,31 @@ const utils = {
     }
   },
   nextPositionOrigin(initialX: number, initialY: number, direction: string) {
-    let topLX = initialX
-    let topLY = initialY
+    let x = initialX
+    let y = initialY
     const size = 4
     if (direction === "left") {
-      topLX -= size
+      x -= size
     } else if (direction === "right") {
-      topLX += size
+      x += size
     } else if (direction === "up") {
-      topLY -= size
+      y -= size
     } else if (direction === "down") {
-      topLY += size
+      y += size
     } else if (direction === "left-up" || direction === "up-left") {
-      topLX -= size
-      topLY -= size
+      x -= size
+      y -= size
     } else if (direction === "left-down" || direction === "down-left") {
-      topLX -= size
-      topLY += size
+      x -= size
+      y += size
     } else if (direction === "right-down" || direction === "down-right") {
-      topLX += size
-      topLY += size
+      x += size
+      y += size
     } else if (direction === "right-up" || direction === "up-right") {
-      topLX += size
-      topLY -= size
+      x += size
+      y -= size
     }
-    return {topLX, topLY}
+    return {x, y}
   },
   createMapWalls(wallsArr: number[], walls: {[key: string]: boolean}) {
     // wallsArr.forEach((wall: number[]) => {
@@ -133,10 +156,56 @@ const utils = {
     // })
   },
   emitEvent(name: string, detail: any) {
-        const event = new CustomEvent(name, {
-        detail
-      })
+    const event = new CustomEvent(name, {
+      detail
+    })
 
-      document.dispatchEvent(event)
+    document.dispatchEvent(event)
+  },
+  checkSomeoneInFront(originX: number, originY: number, direction: string) {
+    if (direction === "up") {
+      let middleX = originX + 8
+      let middleY = originY
+      return [`${middleX - 4},${middleY - 16}`, `${middleX - 8},${middleY - 16}`, `${middleX - 12},${middleY - 16}`]
+    } else if (direction === "down") {
+      let middleX = originX + 8
+      let middleY = originY + 16
+      return [`${middleX - 4},${middleY}`, `${middleX - 8},${middleY}`, `${middleX - 12},${middleY}`]
+    } else if (direction === "right") {
+      let middleX = originX + 16
+      let middleY = originY + 8
+      return [`${middleX},${middleY - 4}`, `${middleX},${middleY - 8}`, `${middleX},${middleY - 12}`]
+    } else if (direction === "left") {
+      let middleX = originX
+      let middleY = originY + 8
+      return [`${middleX - 16},${middleY - 4}`, `${middleX - 16},${middleY - 8}`, `${middleX - 16},${middleY - 12}`]
+    } else {
+      return ["0,0"]
+    }
+  },
+  checkCutsceneAtTile(originX: number, originY: number, direction: string) {
+    if (direction === "up") {
+      let middleX = originX + 8
+      let middleY = originY
+      return [`${middleX - 4},${middleY}`, `${middleX - 8},${middleY}`, `${middleX - 12},${middleY}`]
+    } else if (direction === "down") {
+      let middleX = originX + 8
+      let middleY = originY + 16
+      return [`${middleX - 4},${middleY}`, `${middleX - 8},${middleY}`, `${middleX - 12},${middleY}`]
+    } else if (direction === "right") {
+      let middleX = originX
+      let middleY = originY + 8
+      return [`${middleX},${middleY - 4}`, `${middleX},${middleY - 8}`, `${middleX},${middleY - 12}`]
+    } else if (direction === "left") {
+      let middleX = originX
+      let middleY = originY + 8
+      return [`${middleX},${middleY - 4}`, `${middleX},${middleY - 8}`, `${middleX},${middleY - 12}`]
+    } else {
+      return ["0,0"]
+    }
+  },
+
+  oppositeDirection(direction: string) {
+    return direction === "right" ? "left" : direction === "left" ? "right" : direction === "down" ? "up" : "down"
   }
 }

@@ -9,6 +9,7 @@ class TextMessage {
   text: string
   onComplete: voidFunc
   element!: HTMLElement
+  actionListener!: KeyPressListener
 
   constructor(config: TextMessageConfig) {
     this.text = config.text
@@ -19,7 +20,7 @@ class TextMessage {
     // create the element
     this.element = document.createElement("div")
     this.element.classList.add("TextMessage")
-    
+
     this.element.innerHTML = `
     <p class="textMessage_p" >${this.text}</p>
     <button class="TextMessage_button" > &gt;Next&lt; </button>
@@ -27,7 +28,19 @@ class TextMessage {
 
     this.element.querySelector("button")?.addEventListener("click", () => {
       // close text message
+      this.done()
     })
+
+    this.actionListener = new KeyPressListener("Enter", () => {
+      // unbind the enter button
+      this.actionListener.unbind()
+      this.done()
+    })
+  }
+
+  done() {
+    this.element.remove()
+    this.onComplete()
   }
 
   init(container: HTMLElement) {

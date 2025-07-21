@@ -10,18 +10,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 class OverWorldMap {
     constructor(config) {
+        this.overWorld = null;
         // references the gameObjects to be used here
         this.gameObjects = config.gameObjects;
         this.walls = config.walls || {};
+        this.cutsceneSpaces = config.cutsceneSpaces || {};
         // load the lower image of the map
         this.lowerImage = new Image();
         this.lowerImage.src = config.lowerSrc;
         // lower the upper image of the map
         this.upperImage = new Image();
         this.upperImage.src = config.upperSrc;
-        this.isCutscenePlaying = true;
+        this.isCutscenePlaying = false;
         // mount map walls
-        this.mountMapWalls(collisionDataTestMap);
+        this.collisionData = config.collisionData;
+        this.mountMapWalls(this.collisionData);
     }
     drawLowerImage(ctx, cameraPerson) {
         ctx.drawImage(this.lowerImage, utils.withGrid(10.5) - cameraPerson.x, utils.withGrid(6) - cameraPerson.y);
@@ -32,7 +35,6 @@ class OverWorldMap {
     drawCollisionPoints(ctx, cameraPerson) {
         Object.keys(this.walls).forEach((wall) => {
             let coord = wall.split(",");
-            // console.log(coord)
             let x = Number(coord[0]) - cameraPerson.x + utils.withGrid(10.5);
             let y = Number(coord[1]) - cameraPerson.y + utils.withGrid(6);
             ctx.beginPath();
@@ -53,7 +55,7 @@ class OverWorldMap {
     mountMapWalls(collisionData) {
         for (let y = 0; y < collisionData.length; y++) {
             for (let x = 0; x < collisionData[0].length; x++) {
-                if (collisionData[y][x] === 1) {
+                if (collisionData[y][x] !== 0) {
                     utils.createMapWalls([x, y], this.walls);
                 }
             }
@@ -105,8 +107,37 @@ class OverWorldMap {
             }
             this.isCutscenePlaying = false;
             // reset NPCs to do their behaviors
-            Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this));
+            Object.values(this.gameObjects).forEach((object) => object.doBehaviorEvent(this));
         });
+    }
+    checkForActionCutscene() {
+        const hero = this.gameObjects["hero"];
+        const nextCoords = utils.checkSomeoneInFront(hero.x, hero.y, hero.direction);
+        const match = Object.values(this.gameObjects).find((object) => {
+            return (`${object.x},${object.y}` === nextCoords[0] ||
+                `${object.x},${object.y}` === nextCoords[1] ||
+                `${object.x},${object.y}` === nextCoords[2]);
+        });
+        if (!this.isCutscenePlaying && match && match.talking.length) {
+            // if people have event, fire them here
+            this.startCutscene(match.talking[0].events);
+        }
+    }
+    checkForFootstepCutscene() {
+        const hero = this.gameObjects["hero"];
+        const match = Object.keys(this.cutsceneSpaces).find((cutsceneLine) => {
+            const inline = utils.getInlinePoints(cutsceneLine);
+            // console.log(inline)
+            if (inline.axis === "x") {
+                return inline.start <= hero.x && inline.end >= hero.x && inline.level === hero.y;
+            }
+            else {
+                return inline.start <= hero.y && inline.end >= hero.y && inline.level === hero.x;
+            }
+        });
+        if (match && !this.isCutscenePlaying) {
+            this.startCutscene(this.cutsceneSpaces[match][0].events);
+        }
     }
     // walls functions, add, remove and move
     // NOT multiplied by 16
@@ -121,32 +152,8 @@ class OverWorldMap {
     moveWall(wasX, wasY, direction) {
         // compensate the grid by dividing by 16
         this.removeWall(wasX / 16, wasY / 16);
-        const { topLX, topLY } = utils.nextPositionOrigin(wasX, wasY, direction);
+        const { x, y } = utils.nextPositionOrigin(wasX, wasY, direction);
         // compensate the grid by dividing by 16
-        this.addWall(topLX / 16, topLY / 16);
+        this.addWall(x / 16, y / 16);
     }
 }
-const collisionDataTestMap = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1],
-    [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-];

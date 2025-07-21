@@ -29,6 +29,7 @@ class GameObject {
         // fix behavior type
         this.behaviorLoop = config.behaviorLoop || [];
         this.behaviorLoopIndex = 0;
+        this.talking = config.talking || [];
     }
     // mount wall
     mount(map) {

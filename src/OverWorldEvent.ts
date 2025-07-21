@@ -18,6 +18,8 @@ class OverWorldEvent {
     who?: string
     retry?: boolean
     text?: string
+    faceHero?: string
+    map?: string
   }
 
   constructor(config: OverWorldEventConfig) {
@@ -82,13 +84,24 @@ class OverWorldEvent {
   }
 
   textMessage(resolve: () => void) {
-    if(this.event.text) {
+    if (this.event.faceHero) {
+      const obj = this.map.gameObjects[this.event.faceHero]
+      obj.direction = utils.oppositeDirection(this.map.gameObjects["hero"].direction)
+    }
+
+    if (this.event.text) {
       const message = new TextMessage({
         text: this.event.text,
         onComplete: () => resolve()
       })
       message.init(document.querySelector(".game-container") as HTMLDivElement)
     }
+  }
+
+  changeMap(resolve: () => void) {
+    if (!this.event.map) return
+    this.map.overWorld?.startMap(this.event.map)
+    resolve()
   }
 
   init() {

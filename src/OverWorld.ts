@@ -91,10 +91,39 @@ class OverWorld {
     // this.map.drawCollisionPoints(this.ctx, cameraPerson)
   }
 
-  init() {
-    this.map = new OverWorldMap(TestMap)
+  bindActionInput() {
+    new KeyPressListener("Enter", () => {
+      // is there any NPC here to talk to?
+      this.map.checkForActionCutscene()
+    })
+  }
+
+  bindHeroPositionCheck() {
+    document.addEventListener("PersonWalkingComplete", (e) => {
+      const event = e as CustomEvent
+      if (event.detail.whoId === "hero") {
+        // check if here have stepped into a cutscene spot.
+        this.map.checkForFootstepCutscene()
+      }
+    })
+  }
+
+  startMap(mapConfig: any) {
+    const maps: any = {
+      TestMap: TestMap,
+      Kitchen: Kitchen
+    }
+    this.map = new OverWorldMap(maps[mapConfig])
+    this.map.overWorld = this
     // mount objects walls
     this.map.mountObjects()
+  }
+
+  init() {
+    this.startMap("TestMap")
+
+    this.bindActionInput()
+    this.bindHeroPositionCheck()
 
     // create and initializes the class DirectionInput to listen to keyboard press
     this.directionInput = new DirectionInputs()
@@ -103,16 +132,16 @@ class OverWorld {
     // start game loop
     this.startGameLoop(60)
 
-    this.map.startCutscene([
-      {type: "textMessage", text: "Hello There! how are you doing today aaa? Hello There! how are you doing today aaa?"},
-      // {who: "hero", type: "walk", direction: "right"},
-      // {who: "hero", type: "walk", direction: "right"},
-      // {who: "hero", type: "walk", direction: "right"},
-      // {who: "hero", type: "walk", direction: "right"},
-      // {who: "slime_1", type: "walk", direction: "right"},
-      // {who: "slime_1", type: "walk", direction: "up"},
-      // {who: "slime_1", type: "stand", direction: "left", time: 1000},
-      
-    ])
+    // this.map.startCutscene([
+    //   {who: "hero", type: "walk", direction: "right"},
+    //   {who: "hero", type: "walk", direction: "right"},
+    //   {who: "hero", type: "walk", direction: "right"},
+    //   {who: "hero", type: "walk", direction: "right"},
+    //   {who: "slime_1", type: "walk", direction: "right"},
+    //   {who: "slime_1", type: "walk", direction: "up"},
+    //   {who: "slime_1", type: "stand", direction: "left", time: 500},
+    //   {type: "textMessage", text: "Hello There! how are you doing today?"},
+
+    // ])
   }
 }

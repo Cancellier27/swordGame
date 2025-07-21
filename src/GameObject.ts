@@ -9,6 +9,7 @@ interface GameObjectConfig {
   width: number
   height: number
   behaviorLoop?: any[]
+  talking?: any[]
 }
 class GameObject {
   x: number
@@ -22,6 +23,7 @@ class GameObject {
   behaviorLoop: any[]
   behaviorLoopIndex: number
   isStanding: boolean
+  talking: any[]
 
   constructor(config: GameObjectConfig) {
     this.isStanding = false
@@ -43,6 +45,8 @@ class GameObject {
     // fix behavior type
     this.behaviorLoop = config.behaviorLoop || []
     this.behaviorLoopIndex = 0
+
+    this.talking = config.talking || []
   }
 
   // mount wall
