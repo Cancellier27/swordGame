@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 class OverWorldMap {
     constructor(config) {
         // references the gameObjects to be used here
@@ -10,7 +19,7 @@ class OverWorldMap {
         // lower the upper image of the map
         this.upperImage = new Image();
         this.upperImage.src = config.upperSrc;
-        this.isCutscenePlaying = false;
+        this.isCutscenePlaying = true;
         // mount map walls
         this.mountMapWalls(collisionDataTestMap);
     }
@@ -70,6 +79,34 @@ class OverWorldMap {
                 this.walls[`${pos3[0]},${pos3[1]}`] ||
                 false);
         }
+    }
+    startCutscene(events) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.isCutscenePlaying = true;
+            // Start a loop of async events and await for each one
+            for (let i = 0; i < events.length; i++) {
+                // if it is walking, run it 4 times
+                if (events[i].type === "walk") {
+                    for (let j = 0; j < 4; j++) {
+                        const eventHandler = new OverWorldEvent({
+                            event: events[i],
+                            map: this
+                        });
+                        yield eventHandler.init();
+                    }
+                }
+                else {
+                    const eventHandler = new OverWorldEvent({
+                        event: events[i],
+                        map: this
+                    });
+                    yield eventHandler.init();
+                }
+            }
+            this.isCutscenePlaying = false;
+            // reset NPCs to do their behaviors
+            Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this));
+        });
     }
     // walls functions, add, remove and move
     // NOT multiplied by 16

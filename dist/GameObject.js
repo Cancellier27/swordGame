@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 class GameObject {
     constructor(config) {
+        this.isStanding = false;
         this.id = null;
         this.isMounted = false;
         this.x = config.x || 0;
@@ -43,7 +44,7 @@ class GameObject {
     //  do not do anything is there is no behavior loop
     doBehaviorEvent(map) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (map.isCutscenePlaying || this.behaviorLoop.length === 0) {
+            if (map.isCutscenePlaying || this.behaviorLoop.length === 0 || this.isStanding) {
                 return;
             }
             // check what behavior we are on

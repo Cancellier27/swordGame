@@ -6,16 +6,11 @@ class Person extends GameObject {
   movingProgressRemaining: number
   directionUpdate: {[key: string]: [string, number][]}
   isPlayerControlled: boolean
-  // direction: string
 
   constructor(config: PersonConfig) {
     super(config)
     this.movingProgressRemaining = 0
-
-    // this.direction = config.currentAnimation
-
     this.isPlayerControlled = config.isPlayerControlled
-
     // prettier-ignore
     this.directionUpdate = {
       "up": [["y", -1]],
@@ -40,8 +35,8 @@ class Person extends GameObject {
       // more cases to start to walk wil come here
 
       // arrow comes from the direction input event listener defined in overWorld gameLoop.
-      // if not player, it won't move
-      if (this.isPlayerControlled && state.arrow && this.id) {
+      // To player be able to more, the person needs to be a: Player, have an direction arrow, an Id and there should be no cutscene playing
+      if (!state.map.isCutscenePlaying && this.isPlayerControlled && state.arrow && this.id) {
         this.startBehavior(state, {
           type: "walk",
           direction: state.arrow,
@@ -106,11 +101,13 @@ class Person extends GameObject {
     }
 
     if (behavior.type === "stand") {
+      this.isStanding = true
       setTimeout(() => {
         utils.emitEvent("PersonStandComplete", {
           whoId: this.id
         })
       }, behavior.time)
+      this.isStanding = false
     }
   }
 

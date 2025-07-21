@@ -26,7 +26,7 @@ class OverWorldMap {
     this.upperImage = new Image()
     this.upperImage.src = config.upperSrc
 
-    this.isCutscenePlaying = false
+    this.isCutscenePlaying = true
 
     // mount map walls
     this.mountMapWalls(collisionDataTestMap)
@@ -55,7 +55,6 @@ class OverWorldMap {
 
   mountObjects() {
     Object.keys(this.gameObjects).forEach((key) => {
-
       let object = this.gameObjects[key]
       // set the id for each character automatically
       object.id = key
@@ -97,6 +96,35 @@ class OverWorldMap {
         false
       )
     }
+  }
+
+  async startCutscene(events: any) {
+    this.isCutscenePlaying = true
+    // Start a loop of async events and await for each one
+    for (let i = 0; i < events.length; i++) {
+      // if it is walking, run it 4 times
+      if (events[i].type === "walk") {
+        for (let j = 0; j < 4; j++) {
+          const eventHandler = new OverWorldEvent({
+            event: events[i],
+            map: this
+          })
+          await eventHandler.init()
+        }
+      } else {
+        const eventHandler = new OverWorldEvent({
+          event: events[i],
+          map: this
+        })
+        await eventHandler.init()
+      }
+    }
+
+    this.isCutscenePlaying = false
+
+    // reset NPCs to do their behaviors
+    Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this))
+
   }
 
   // walls functions, add, remove and move

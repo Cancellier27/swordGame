@@ -16,9 +16,9 @@ const TestMap = {
             height: 16,
             behaviorLoop: [
                 { type: "stand", direction: "up", time: 800 },
-                { type: "stand", direction: "right", time: 2000 },
-                { type: "stand", direction: "left", time: 1200 },
-                { type: "stand", direction: "down", time: 800 },
+                { type: "stand", direction: "right", time: 1800 },
+                { type: "stand", direction: "down", time: 1500 },
+                { type: "stand", direction: "left", time: 2500 },
             ]
         }),
         npcA: new Person({

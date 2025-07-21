@@ -9,7 +9,7 @@ const createWindow = () => {
             contextIsolation: true
         }
     });
-    win.loadFile(path.join("C:/Dev/SWORD_GAME/src", "index.html"));
+    win.loadFile(path.join("C:/Dev/SWORD_GAME/dist", "index.html"));
 };
 app.whenReady().then(() => {
     createWindow();

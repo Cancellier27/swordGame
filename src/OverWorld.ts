@@ -102,5 +102,16 @@ class OverWorld {
 
     // start game loop
     this.startGameLoop(60)
+
+    this.map.startCutscene([
+      {who: "hero", type: "walk", direction: "right"},
+      {who: "hero", type: "walk", direction: "right"},
+      {who: "hero", type: "walk", direction: "right"},
+      {who: "hero", type: "walk", direction: "right"},
+      {who: "slime_1", type: "walk", direction: "right"},
+      {who: "slime_1", type: "walk", direction: "up"},
+      {who: "slime_1", type: "stand", direction: "left", time: 1000},
+      
+    ])
   }
 }

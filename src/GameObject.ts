@@ -21,8 +21,10 @@ class GameObject {
   id: null | string
   behaviorLoop: any[]
   behaviorLoopIndex: number
+  isStanding: boolean
 
   constructor(config: GameObjectConfig) {
+    this.isStanding = false
     this.id = null
     this.isMounted = false
     this.x = config.x || 0
@@ -58,17 +60,17 @@ class GameObject {
   startBehavior(
     state: {arrow: string; map: OverWorldMap},
     behavior: {
-    type: string
-    direction: string
-    time?: number
-    who?: string
-    retry?: boolean
-  }
+      type: string
+      direction: string
+      time?: number
+      who?: string
+      retry?: boolean
+    }
   ) {}
 
   //  do not do anything is there is no behavior loop
   async doBehaviorEvent(map: OverWorldMap) {
-    if (map.isCutscenePlaying || this.behaviorLoop.length === 0) {
+    if (map.isCutscenePlaying || this.behaviorLoop.length === 0 || this.isStanding) {
       return
     }
 
