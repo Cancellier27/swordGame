@@ -36,7 +36,8 @@ const TestMap = {
                 {
                     events: [
                         { type: "textMessage", text: "Hey!", faceHero: "slime_1" },
-                        { type: "textMessage", text: "Get out of my way!!" }
+                        { type: "textMessage", text: "Your name is Dyanne?" },
+                        { type: "textMessage", text: "lets have sex sometime" }
                     ]
                 }
             ]
@@ -68,7 +69,7 @@ const TestMap = {
     // [utils.asGridCoord(42, 26)]: true,
     },
     cutsceneSpaces: {
-        [utils.inlinePoints(15, 11, 15, 11)]: [
+        [utils.inlinePoints(15, 11, 16, 11)]: [
             {
                 events: [
                     { who: "npcA", type: "walk", direction: "left" },
@@ -76,26 +77,15 @@ const TestMap = {
                     { who: "npcA", type: "walk", direction: "left" },
                     { who: "npcA", type: "walk", direction: "up" },
                     { type: "textMessage", text: "Hey, you!" },
-                    { who: "hero", type: "stand", direction: "down", time: 10 },
                     { type: "textMessage", text: "Can't go upper there, go back now!" },
                     { who: "npcA", type: "walk", direction: "right" },
                     { who: "npcA", type: "stand", direction: "down", time: 500 },
+                    { who: "hero", type: "stand", direction: "down", time: 10 },
                     { who: "hero", type: "walk", direction: "down" },
                     { who: "hero", type: "walk", direction: "down" },
                     { who: "npcA", type: "walk", direction: "down" },
                     { who: "npcA", type: "walk", direction: "right" },
                     { who: "npcA", type: "walk", direction: "right" }
-                ]
-            }
-        ],
-        [utils.inlinePoints(13, 15)]: [
-            {
-                events: [
-                    { type: "textMessage", text: "Cutsceneeee" },
-                    { type: "textMessage", text: "Go back now!" },
-                    { who: "hero", type: "walk", direction: "right" },
-                    { who: "hero", type: "walk", direction: "right" },
-                    { who: "hero", type: "walk", direction: "right" }
                 ]
             }
         ],

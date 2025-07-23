@@ -132,16 +132,12 @@ class OverWorld {
     // start game loop
     this.startGameLoop(60)
 
+    // max text size
     // this.map.startCutscene([
-    //   {who: "hero", type: "walk", direction: "right"},
-    //   {who: "hero", type: "walk", direction: "right"},
-    //   {who: "hero", type: "walk", direction: "right"},
-    //   {who: "hero", type: "walk", direction: "right"},
-    //   {who: "slime_1", type: "walk", direction: "right"},
-    //   {who: "slime_1", type: "walk", direction: "up"},
-    //   {who: "slime_1", type: "stand", direction: "left", time: 500},
-    //   {type: "textMessage", text: "Hello There! how are you doing today?"},
-
+    //   {
+    //     type: "textMessage",
+    //     text: "Hello There! how are you doing today? Hello There! how are you doing today? Hello There! how are you doing today? Hello There!"
+    //   }
     // ])
   }
 }
