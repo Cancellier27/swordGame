@@ -229,5 +229,8 @@ const utils = {
     },
     oppositeDirection(direction) {
         return direction === "right" ? "left" : direction === "left" ? "right" : direction === "down" ? "up" : "down";
+    },
+    getOneDirection(direction) {
+        return direction.split("-")[0];
     }
 };

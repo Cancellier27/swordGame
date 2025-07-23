@@ -24,6 +24,7 @@ class GameObject {
   behaviorLoopIndex: number
   isStanding: boolean
   talking: any[]
+  isAttacking: boolean
 
   constructor(config: GameObjectConfig) {
     this.isStanding = false
@@ -47,6 +48,8 @@ class GameObject {
     this.behaviorLoopIndex = 0
 
     this.talking = config.talking || []
+
+    this.isAttacking = false
   }
 
   // mount wall

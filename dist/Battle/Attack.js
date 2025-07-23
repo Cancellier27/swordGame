@@ -6,7 +6,7 @@ class Attack {
     }
     init() {
         this.isAttacking = new KeyPressListener("Space", () => {
-            console.log("pressing space");
+            this.player.isAttacking = true;
         });
     }
 }

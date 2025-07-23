@@ -206,5 +206,8 @@ const utils = {
   },
   oppositeDirection(direction: string) {
     return direction === "right" ? "left" : direction === "left" ? "right" : direction === "down" ? "up" : "down"
+  },
+  getOneDirection(direction: string) {
+    return direction.split("-")[0]
   }
 }

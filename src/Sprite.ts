@@ -64,10 +64,10 @@ class Sprite {
       "walk-down-left": [[0, 7], [1, 7], [2, 7], [3, 7], [4, 7], [5, 7]],
       "walk-left-down": [[0, 7], [1, 7], [2, 7], [3, 7], [4, 7], [5, 7]],
       // // attacking
-      // "attack-up": [[0, 8], [1, 8], [2, 8], [3, 8]],
-      // "attack-down": [[0, 9], [1, 9], [2, 9], [3, 9]],
-      // "attack-right": [[0, 10], [1, 10], [2, 10], [3, 10]],
-      // "attack-left": [[0, 11], [1, 11], [2, 11], [3, 11]],
+      "attack-up": [[0, 8], [1, 8], [2, 8], [3, 8]],
+      "attack-down": [[0, 9], [1, 9], [2, 9], [3, 9]],
+      "attack-right": [[0, 10], [1, 10], [2, 10], [3, 10]],
+      "attack-left": [[0, 11], [1, 11], [2, 11], [3, 11]],
       // // dyeing
       // "die-right": [[0, 12], [1, 12], [2, 12], [3, 12], [3, 12]],
       // "die-left": [[0, 13], [1, 13], [2, 13], [3, 13], [3, 13]]
@@ -97,26 +97,29 @@ class Sprite {
       this.currentAnimation = key
       this.currentAnimationFrame = 0
       this.animationFrameLimitProgress = this.animationFrameLimit
+      
     }
   }
-
+  
   updateAnimationProgress() {
     // downtick frame progress, if animationFrameLimitProgress is not 0, do not update anything
     if (this.animationFrameLimitProgress > 0) {
       this.animationFrameLimitProgress -= 1
       return
     }
-
+    
     // reset the counter if animationFrameLimitProgress is 0
     this.animationFrameLimitProgress = this.animationFrameLimit
     this.currentAnimationFrame += 1
-
+    
     // reset the animation frame to the first one
     if (this.frame === undefined) {
+      // ends the animation of attack
+      this.gameObject.isAttacking = false
       this.currentAnimationFrame = 0
     }
   }
-
+  
   draw(ctx: CanvasRenderingContext2D, cameraPerson: GameObject) {
     let x: number = 0
     let y: number = 0

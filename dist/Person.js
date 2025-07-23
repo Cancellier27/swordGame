@@ -120,6 +120,10 @@ class Person extends GameObject {
         }
     }
     updateSprite() {
+        if (this.isAttacking) {
+            this.sprite.setAnimation("attack-" + utils.getOneDirection(this.direction));
+            return;
+        }
         if (this.movingProgressRemaining > 0) {
             this.sprite.setAnimation("walk-" + this.direction);
             return;
