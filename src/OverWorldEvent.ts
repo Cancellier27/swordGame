@@ -100,8 +100,15 @@ class OverWorldEvent {
 
   changeMap(resolve: () => void) {
     if (!this.event.map) return
-    this.map.overWorld?.startMap(this.event.map)
-    resolve()
+
+    const sceneTransitionFog = new SceneTransition()
+
+    sceneTransitionFog.init(document.querySelector(".game-container") as HTMLDivElement, () => {
+      this.map.overWorld?.startMap(this.event.map)
+      resolve()
+
+      sceneTransitionFog.fadeOut()
+    })
   }
 
   init() {

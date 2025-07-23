@@ -36,8 +36,7 @@ const TestMap = {
                 {
                     events: [
                         { type: "textMessage", text: "Hey!", faceHero: "slime_1" },
-                        { type: "textMessage", text: "Your name is Dyanne?" },
-                        { type: "textMessage", text: "lets have sex sometime" }
+                        { type: "textMessage", text: "Get out of my way!" },
                     ]
                 }
             ]

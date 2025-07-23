@@ -16,6 +16,7 @@ class OverWorldMap {
   cutsceneSpaces: any
   overWorld: OverWorld | null
   collisionData: number[][]
+  attacking: Attack
 
   constructor(config: OverWorldMapConfig) {
     this.overWorld = null
@@ -35,6 +36,10 @@ class OverWorldMap {
     this.upperImage.src = config.upperSrc
 
     this.isCutscenePlaying = false
+
+    // check if player is attacking
+    this.attacking = new Attack({map: this})
+    this.attacking.init()
 
     // mount map walls
     this.collisionData = config.collisionData

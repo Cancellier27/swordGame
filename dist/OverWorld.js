@@ -107,5 +107,8 @@ class OverWorld {
         //     text: "Hello There! how are you doing today? Hello There! how are you doing today? Hello There! how are you doing today? Hello There!"
         //   }
         // ])
+        // this.map.startCutscene([
+        //   {type: "changeMap", map: "Kitchen"}
+        // ])
     }
 }

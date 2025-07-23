@@ -22,6 +22,9 @@ class OverWorldMap {
         this.upperImage = new Image();
         this.upperImage.src = config.upperSrc;
         this.isCutscenePlaying = false;
+        // check if player is attacking
+        this.attacking = new Attack({ map: this });
+        this.attacking.init();
         // mount map walls
         this.collisionData = config.collisionData;
         this.mountMapWalls(this.collisionData);

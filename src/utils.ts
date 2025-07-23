@@ -204,7 +204,6 @@ const utils = {
       return ["0,0"]
     }
   },
-
   oppositeDirection(direction: string) {
     return direction === "right" ? "left" : direction === "left" ? "right" : direction === "down" ? "up" : "down"
   }

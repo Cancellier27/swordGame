@@ -62,11 +62,15 @@ class OverWorldEvent {
         }
     }
     changeMap(resolve) {
-        var _a;
         if (!this.event.map)
             return;
-        (_a = this.map.overWorld) === null || _a === void 0 ? void 0 : _a.startMap(this.event.map);
-        resolve();
+        const sceneTransitionFog = new SceneTransition();
+        sceneTransitionFog.init(document.querySelector(".game-container"), () => {
+            var _a;
+            (_a = this.map.overWorld) === null || _a === void 0 ? void 0 : _a.startMap(this.event.map);
+            resolve();
+            sceneTransitionFog.fadeOut();
+        });
     }
     init() {
         return new Promise((resolve) => {
