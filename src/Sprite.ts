@@ -21,6 +21,7 @@ class Sprite {
   animationFrameLimit: number
   animationFrameLimitProgress: number
   tileSize: number
+  AttackAnimating: boolean
 
   constructor(config: SpriteConfig) {
     // set up the image to be used in this sprite
@@ -85,6 +86,9 @@ class Sprite {
 
     // reference GameObject class to be used here
     this.gameObject = config.gameObject
+
+    // attacking Flag to finish the whole attack animation
+    this.AttackAnimating = false
   }
 
   // gets the animation frame that the player is on.
@@ -97,21 +101,20 @@ class Sprite {
       this.currentAnimation = key
       this.currentAnimationFrame = 0
       this.animationFrameLimitProgress = this.animationFrameLimit
-      
     }
   }
-  
+
   updateAnimationProgress() {
     // downtick frame progress, if animationFrameLimitProgress is not 0, do not update anything
     if (this.animationFrameLimitProgress > 0) {
       this.animationFrameLimitProgress -= 1
       return
     }
-    
+
     // reset the counter if animationFrameLimitProgress is 0
     this.animationFrameLimitProgress = this.animationFrameLimit
     this.currentAnimationFrame += 1
-    
+
     // reset the animation frame to the first one
     if (this.frame === undefined) {
       // ends the animation of attack
@@ -119,7 +122,7 @@ class Sprite {
       this.currentAnimationFrame = 0
     }
   }
-  
+
   draw(ctx: CanvasRenderingContext2D, cameraPerson: GameObject) {
     let x: number = 0
     let y: number = 0
@@ -169,7 +172,6 @@ class Sprite {
       //   ctx.lineWidth = 2 // Optional: set border thickness
       //   ctx.strokeRect(x + 6, y + 10, this.gameObject.width, this.gameObject.height) // (x, y, width, height)
       // }
-
     }
 
     this.updateAnimationProgress()

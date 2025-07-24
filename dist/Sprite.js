@@ -60,6 +60,8 @@ class Sprite {
         this.tileSize = config.tileSize;
         // reference GameObject class to be used here
         this.gameObject = config.gameObject;
+        // attacking Flag to finish the whole attack animation
+        this.AttackAnimating = false;
     }
     // gets the animation frame that the player is on.
     get frame() {

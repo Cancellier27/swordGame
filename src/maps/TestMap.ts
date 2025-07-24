@@ -14,32 +14,32 @@ const TestMap = {
       width: 16,
       height: 16
     }),
-    // slime_1: new Person({
-    //   x: utils.withGrid(14),
-    //   y: utils.withGrid(18),
-    //   isPlayerControlled: false,
-    //   currentAnimation: "idle-down",
-    //   direction: "down",
-    //   src: "../images/characters/people/slime.png",
-    //   tileSize: 32,
-    //   useShadow: false,
-    //   width: 16,
-    //   height: 16,
-    //   behaviorLoop: [
-    //     {type: "stand", direction: "up", time: 800},
-    //     {type: "stand", direction: "right", time: 1800},
-    //     {type: "stand", direction: "down", time: 1500},
-    //     {type: "stand", direction: "left", time: 2500}
-    //   ],
-    //   talking: [
-    //     {
-    //       events: [
-    //         {type: "textMessage", text: "Hey!", faceHero: "slime_1"},
-    //         {type: "textMessage", text: "Get out of my way!"},
-    //       ]
-    //     }
-    //   ]
-    // }),
+    slime_1: new Person({
+      x: utils.withGrid(14),
+      y: utils.withGrid(18),
+      isPlayerControlled: false,
+      currentAnimation: "idle-down",
+      direction: "down",
+      src: "../images/characters/people/slime.png",
+      tileSize: 32,
+      useShadow: false,
+      width: 16,
+      height: 16,
+      behaviorLoop: [
+        {type: "stand", direction: "up", time: 800},
+        {type: "stand", direction: "right", time: 1800},
+        {type: "stand", direction: "down", time: 1500},
+        {type: "stand", direction: "left", time: 2500}
+      ],
+      talking: [
+        {
+          events: [
+            {type: "textMessage", text: "Hey!", faceHero: "slime_1"},
+            {type: "textMessage", text: "Get out of my way!"},
+          ]
+        }
+      ]
+    }),
     // npcA: new Person({
     //   x: utils.withGrid(19),
     //   y: utils.withGrid(13),

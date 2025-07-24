@@ -83,6 +83,11 @@ class OverWorldEvent {
     }
   }
 
+  attack(resolve: () => void) {
+    console.log("attacking event")
+    resolve()
+  }
+
   textMessage(resolve: () => void) {
     if (this.event.faceHero) {
       const obj = this.map.gameObjects[this.event.faceHero]

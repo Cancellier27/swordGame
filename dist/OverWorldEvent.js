@@ -48,6 +48,10 @@ class OverWorldEvent {
             document.addEventListener("PersonWalkingComplete", completeHandler);
         }
     }
+    attack(resolve) {
+        console.log("attacking event");
+        resolve();
+    }
     textMessage(resolve) {
         if (this.event.faceHero) {
             const obj = this.map.gameObjects[this.event.faceHero];

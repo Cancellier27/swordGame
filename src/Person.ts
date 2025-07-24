@@ -37,11 +37,19 @@ class Person extends GameObject {
       // arrow comes from the direction input event listener defined in overWorld gameLoop.
       // To player be able to more, the person needs to be a: Player, have an direction arrow, an Id and there should be no cutscene playing
       if (!state.map.isCutscenePlaying && this.isPlayerControlled && state.arrow && this.id) {
-        this.startBehavior(state, {
-          type: "walk",
-          direction: state.arrow,
-          who: this.id
-        })
+        if (this.isAttacking) {
+          this.startBehavior(state, {
+            type: "attack",
+            direction: state.arrow,
+            who: this.id
+          })
+        } else {
+          this.startBehavior(state, {
+            type: "walk",
+            direction: state.arrow,
+            who: this.id
+          })
+        }
       }
       this.updateSprite()
     }
@@ -59,19 +67,20 @@ class Person extends GameObject {
   ) {
     // set the character to walk or do some behavior
     this.direction = behavior.direction
+    const validDiagonalMovements = [
+      "up-right",
+      "right-up",
+      "down-right",
+      "right-down",
+      "up-left",
+      "left-up",
+      "down-left",
+      "left-down"
+    ]
 
+    // WALK behavior ------------------------------------------------------------
     if (behavior.type === "walk") {
       if (state.map.isSpaceTaken(this.x, this.y, this.direction)) {
-        const validDiagonalMovements = [
-          "up-right",
-          "right-up",
-          "down-right",
-          "right-down",
-          "up-left",
-          "left-up",
-          "down-left",
-          "left-down"
-        ]
         if (validDiagonalMovements.includes(this.direction)) {
           const dir = this.direction.split("-")
 
@@ -100,6 +109,7 @@ class Person extends GameObject {
       this.updateSprite()
     }
 
+    // STAND behavior ------------------------------------------------------------
     if (behavior.type === "stand") {
       this.isStanding = true
       setTimeout(() => {
@@ -109,6 +119,15 @@ class Person extends GameObject {
       }, behavior.time)
       this.isStanding = false
     }
+
+    // // attacking behavior ------------------------------------------------------------
+    // if (behavior.type === "attack") {
+    //   setTimeout(() => {
+    //     utils.emitEvent("PersonStandComplete", {
+    //       whoId: this.id
+    //     })
+    //   }, behavior.time)
+    // }
   }
 
   // update player position and movingProgressRemaining
@@ -146,7 +165,7 @@ class Person extends GameObject {
       return
     }
 
-    if (this.movingProgressRemaining > 0) {
+    if (this.movingProgressRemaining > 0 && !this.isAttacking) {
       this.sprite.setAnimation("walk-" + this.direction)
       return
     }
