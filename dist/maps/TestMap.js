@@ -36,11 +36,11 @@ const TestMap = {
                 {
                     events: [
                         { type: "textMessage", text: "Hey!", faceHero: "slime_1" },
-                        { type: "textMessage", text: "Get out of my way!" },
+                        { type: "textMessage", text: "Get out of my way!" }
                     ]
                 }
             ]
-        }),
+        })
         // npcA: new Person({
         //   x: utils.withGrid(19),
         //   y: utils.withGrid(13),

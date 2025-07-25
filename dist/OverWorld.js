@@ -59,12 +59,15 @@ class OverWorld {
             return a.y - b.y;
         })
             .forEach((object) => {
-            object.sprite.draw(this.ctx, cameraPerson);
+            // if dead do not render it
+            if (object.state.hp > 0) {
+                object.sprite.draw(this.ctx, cameraPerson);
+            }
         });
         // Draw UPPER tiles layer
         this.map.drawUpperImage(this.ctx, cameraPerson);
         // COLLISION WALLS FOR DEBUGGING
-        // this.map.drawCollisionPoints(this.ctx, cameraPerson)
+        this.map.drawCollisionPoints(this.ctx, cameraPerson);
     }
     bindActionInput() {
         new KeyPressListener("Enter", () => {
@@ -90,6 +93,8 @@ class OverWorld {
         this.map.overWorld = this;
         // mount objects walls
         this.map.mountObjects();
+        // load save state
+        this.map.loadObjectsState();
     }
     init() {
         this.startMap("TestMap");

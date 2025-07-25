@@ -25,6 +25,7 @@ class GameObject {
   isStanding: boolean
   talking: any[]
   isAttacking: boolean
+  state!: {[key: string]: any}
 
   constructor(config: GameObjectConfig) {
     this.isStanding = false

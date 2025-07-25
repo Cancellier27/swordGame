@@ -9,7 +9,7 @@ const attackRanges = {
         }
         return points;
     },
-    swordNormal(x, y, direction) {
+    swordSwing(x, y, direction) {
         const points = {};
         if (direction === "right") {
             ;

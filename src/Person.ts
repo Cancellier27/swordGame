@@ -29,6 +29,9 @@ class Person extends GameObject {
   }
 
   update(state: {arrow: string; map: OverWorldMap}) {
+    // if Person is dead, do not do anything
+    // if (this.isAlive) return
+
     if (this.movingProgressRemaining > 0) {
       this.updatePosition()
     } else {
@@ -102,11 +105,13 @@ class Person extends GameObject {
           return
         }
       }
-      // set a wall onto the next space here will be
-      state.map.moveWall(this.x, this.y, this.direction)
-      // keep walking!
-      this.movingProgressRemaining = 4
-      this.updateSprite()
+      if (this.isAlive) {
+        // set a wall onto the next space here will be
+        state.map.moveWall(this.x, this.y, this.direction)
+        // keep walking!
+        this.movingProgressRemaining = 4
+        this.updateSprite()
+      }
     }
 
     // STAND behavior ------------------------------------------------------------
@@ -134,7 +139,9 @@ class Person extends GameObject {
             return
           }
         }
+        return
       }
+
       // set a wall onto the next space here will be
       state.map.moveWall(this.x, this.y, this.direction)
       // keep walking!
@@ -172,7 +179,15 @@ class Person extends GameObject {
     }
   }
 
+  // get if the object HP is > 0
+  get isAlive() {
+    return this.state.hp > 0
+  }
+
   updateSprite() {
+    // check if the entity is alive, hp > 0
+    if (this.state.hp <= 0) return
+
     if (this.isAttacking) {
       this.sprite.setAnimation("attack-" + utils.getOneDirection(this.direction))
       return

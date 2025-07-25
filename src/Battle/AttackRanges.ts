@@ -10,7 +10,7 @@ const attackRanges = {
 
     return points
   },
-  swordNormal(x: number, y: number, direction: string) {
+  swordSwing(x: number, y: number, direction: string) {
     const points: {[key: string]: number} = {}
 
     if (direction === "right") {

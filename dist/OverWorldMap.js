@@ -142,6 +142,17 @@ class OverWorldMap {
             this.startCutscene(this.cutsceneSpaces[match][0].events);
         }
     }
+    loadObjectsState() {
+        Object.keys(this.gameObjects).forEach((key) => {
+            if (key === "hero") {
+                this.gameObjects[key]["state"] = PlayerState;
+            }
+            else {
+                let enemyClass = key.split("_")[0];
+                this.gameObjects[key]["state"] = EnemyState[enemyClass];
+            }
+        });
+    }
     // walls functions, add, remove and move
     // NOT multiplied by 16
     addWall(x, y) {
