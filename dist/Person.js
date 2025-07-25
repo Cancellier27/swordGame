@@ -101,14 +101,28 @@ class Person extends GameObject {
             }, behavior.time);
             this.isStanding = false;
         }
-        // // attacking behavior ------------------------------------------------------------
-        // if (behavior.type === "attack") {
-        //   setTimeout(() => {
-        //     utils.emitEvent("PersonStandComplete", {
-        //       whoId: this.id
-        //     })
-        //   }, behavior.time)
-        // }
+        // Push behavior ------------------------------------------------------------
+        if (behavior.type === "push") {
+            if (state.map.isSpaceTaken(this.x, this.y, this.direction)) {
+                if (validDiagonalMovements.includes(this.direction)) {
+                    const dir = this.direction.split("-");
+                    if (!state.map.isSpaceTaken(this.x, this.y, dir[0])) {
+                        this.direction = dir[0];
+                    }
+                    else if (!state.map.isSpaceTaken(this.x, this.y, dir[1])) {
+                        this.direction = dir[1];
+                    }
+                    else {
+                        return;
+                    }
+                }
+            }
+            // set a wall onto the next space here will be
+            state.map.moveWall(this.x, this.y, this.direction);
+            // keep walking!
+            this.movingProgressRemaining = 4;
+            this.updateSprite();
+        }
     }
     // update player position and movingProgressRemaining
     updatePosition() {

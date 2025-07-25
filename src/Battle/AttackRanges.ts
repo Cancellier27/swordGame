@@ -11,23 +11,19 @@ const attackRanges = {
     return points
   },
   swordNormal(x: number, y: number, direction: string) {
-    // const points: {[key: string]: boolean} = {}
-    // if (direction === "right") {
-    //   ;(points[`${x + 16},${y - 4}`] = true),
-    //     (points[`${x + 20},${y}`] = true),
-    //     (points[`${x + 24},${y + 4}`] = true),
-    //     (points[`${x + 24},${y + 8}`] = true),
-    //     (points[`${x + 24},${y + 12}`] = true),
-    //     (points[`${x + 20},${y + 16}`] = true),
-    //     (points[`${x + 16},${y + 20}`] = true)
-    // }
-    // x+16 to x+24
-    // y-8 to y+24
-
     const points: {[key: string]: number} = {}
 
     if (direction === "right") {
       ;(points["startX"] = x + 16), (points["endX"] = x + 24), (points["startY"] = y - 8)
+      points["endY"] = y + 24
+    } else if (direction === "left") {
+      ;(points["startX"] = x - 24), (points["endX"] = x - 16), (points["startY"] = y - 8)
+      points["endY"] = y + 24
+    } else if (direction === "up") {
+      ;(points["startX"] = x - 8), (points["endX"] = x + 24), (points["startY"] = y - 24)
+      points["endY"] = y - 16
+    } else if (direction === "down") {
+      ;(points["startX"] = x - 8), (points["endX"] = x + 24), (points["startY"] = y + 16)
       points["endY"] = y + 24
     }
 
