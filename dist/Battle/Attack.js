@@ -4,7 +4,6 @@ class Attack {
         this.player = config.map.gameObjects.hero;
         this.gameObjects = config.map.gameObjects;
         this.map = config.map;
-        this.isAttacking = null;
     }
     wasSomeoneHit() {
         const x = this.player.x;
@@ -36,7 +35,7 @@ class Attack {
         // check if no one is hit and return the func
         if (entitiesHit.length === 0)
             return;
-        // if hit, start the behavior to push the opponent in the opposite direction adn decrease health
+        // if hit, start the behavior to push the opponent in the opposite direction and decrease health
         entitiesHit.forEach((object) => {
             object.startBehavior({
                 arrow: direction,
@@ -54,16 +53,17 @@ class Attack {
         if (enemyHp > 0) {
             object.state.hp = enemyHp - attackStrength;
         }
+        // remove the walls after the enemy vanishes on screen
         if (enemyHp - attackStrength <= 0) {
             setTimeout(() => {
                 this.map.removeWall(object.x / 16, object.y / 16);
-            }, 100);
+            }, object.vanishDuration);
         }
-        console.log(object.state.hp);
     }
     init() {
-        this.isAttacking = new KeyPressListener("Space", () => {
+        new KeyPressListener("Space", () => {
             this.player.isAttacking = true;
+            this.map.startCutscene([{ type: "attack", who: "hero", direction: this.player.direction }]);
             this.wasSomeoneHit();
         });
     }

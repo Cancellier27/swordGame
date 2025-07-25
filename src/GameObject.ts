@@ -10,6 +10,7 @@ interface GameObjectConfig {
   height: number
   behaviorLoop?: any[]
   talking?: any[]
+  vanishDuration?:number
 }
 class GameObject {
   x: number
@@ -26,6 +27,8 @@ class GameObject {
   talking: any[]
   isAttacking: boolean
   state!: {[key: string]: any}
+  isAlive: boolean
+  vanishDuration?:number
 
   constructor(config: GameObjectConfig) {
     this.isStanding = false
@@ -37,12 +40,14 @@ class GameObject {
     this.width = config.width
     this.height = config.height
     this.direction = config.direction
+    this.vanishDuration = config.vanishDuration || 500
     this.sprite = new Sprite({
       gameObject: this,
       src: config.src,
       currentAnimation: config.currentAnimation,
       tileSize: config.tileSize,
-      useShadow: config.useShadow
+      useShadow: config.useShadow,
+      vanishDuration: config.vanishDuration || 500
     })
     // fix behavior type
     this.behaviorLoop = config.behaviorLoop || []
@@ -51,6 +56,7 @@ class GameObject {
     this.talking = config.talking || []
 
     this.isAttacking = false
+    this.isAlive = true
   }
 
   // mount wall
@@ -65,6 +71,7 @@ class GameObject {
   }
 
   update(state: {arrow: string; map: OverWorldMap}) {}
+
   startBehavior(
     state: {arrow: string; map: OverWorldMap},
     behavior: {

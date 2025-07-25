@@ -126,7 +126,7 @@ class Person extends GameObject {
             state.map.moveWall(this.x, this.y, this.direction);
             // keep walking!
             this.movingProgressRemaining = 4;
-            this.updateSprite();
+            // this.updateSprite()
         }
     }
     // update player position and movingProgressRemaining
@@ -156,10 +156,6 @@ class Person extends GameObject {
                 whoId: this.id
             });
         }
-    }
-    // get if the object HP is > 0
-    get isAlive() {
-        return this.state.hp > 0;
     }
     updateSprite() {
         // check if the entity is alive, hp > 0

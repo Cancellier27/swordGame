@@ -28,7 +28,7 @@ class OverWorld {
             }
             let delta = (timestampMs - previousMs) / 1000;
             while (delta >= step) {
-                this.loop();
+                this.loop(step);
                 delta -= step;
             }
             previousMs = timestampMs - delta * 1000;
@@ -38,7 +38,7 @@ class OverWorld {
         // initial kick off!
         requestAnimationFrame(tick);
     }
-    loop() {
+    loop(step) {
         // what to update during the loop to be put here
         // clear the canvas every time the loop runs, before drawing onto screen.
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -60,14 +60,14 @@ class OverWorld {
         })
             .forEach((object) => {
             // if dead do not render it
-            if (object.state.hp > 0) {
-                object.sprite.draw(this.ctx, cameraPerson);
-            }
+            // if (object.state.hp > 0) {
+            object.sprite.draw(this.ctx, cameraPerson, step);
+            // }
         });
         // Draw UPPER tiles layer
         this.map.drawUpperImage(this.ctx, cameraPerson);
-        // COLLISION WALLS FOR DEBUGGING
-        this.map.drawCollisionPoints(this.ctx, cameraPerson);
+        // COLLISION WALLS FOR DEBUGGING ---------------------------------------------------
+        // this.map.drawCollisionPoints(this.ctx, cameraPerson)
     }
     bindActionInput() {
         new KeyPressListener("Enter", () => {

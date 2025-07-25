@@ -6,6 +6,7 @@ interface SpriteConfig {
   animationFrameLimit?: number
   tileSize: number
   useShadow: boolean
+  vanishDuration: number
 }
 
 class Sprite {
@@ -22,6 +23,8 @@ class Sprite {
   animationFrameLimitProgress: number
   tileSize: number
   AttackAnimating: boolean
+  vanishTime: number
+  vanishDuration: number
 
   constructor(config: SpriteConfig) {
     // set up the image to be used in this sprite
@@ -89,6 +92,10 @@ class Sprite {
 
     // attacking Flag to finish the whole attack animation
     this.AttackAnimating = false
+
+    // time to vanish the character from scree
+    this.vanishTime = 0
+    this.vanishDuration = config.vanishDuration
   }
 
   // gets the animation frame that the player is on.
@@ -117,13 +124,34 @@ class Sprite {
 
     // reset the animation frame to the first one
     if (this.frame === undefined) {
-      // ends the animation of attack
-      this.gameObject.isAttacking = false
+      if (this.gameObject.isAttacking) {
+        // ends the animation of attack
+        this.gameObject.isAttacking = false
+        // emit event to finish the attack
+        utils.emitEvent("PersonAttackingComplete", {
+          whoId: this.gameObject.id
+        })
+      }
       this.currentAnimationFrame = 0
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D, cameraPerson: GameObject) {
+  draw(ctx: CanvasRenderingContext2D, cameraPerson: GameObject, step: number) {
+    let alpha = 1
+
+    // dim the enemy when killed
+    if (this.gameObject.state.hp <= 0) {
+      this.vanishTime += step * 1000
+      if (alpha - this.vanishTime / this.vanishDuration <= 0) {
+        // completed vanished
+        this.gameObject.isAlive = false
+        alpha = 0
+        return
+      } else {
+        alpha = alpha - this.vanishTime / this.vanishDuration
+      }
+    }
+
     let x: number = 0
     let y: number = 0
     if (this.tileSize === 48) {
@@ -133,6 +161,9 @@ class Sprite {
       x = this.gameObject.x - 8 + utils.withGrid(10.5) - cameraPerson.x
       y = this.gameObject.y - 18 + utils.withGrid(6.5) - cameraPerson.y
     }
+
+    ctx.save()
+    ctx.globalAlpha = alpha
 
     this.isShadowLoaded &&
       ctx.drawImage(
@@ -173,6 +204,7 @@ class Sprite {
       //   ctx.strokeRect(x + 6, y + 10, this.gameObject.width, this.gameObject.height) // (x, y, width, height)
       // }
     }
+    ctx.restore()
 
     this.updateAnimationProgress()
   }

@@ -84,8 +84,18 @@ class OverWorldEvent {
   }
 
   attack(resolve: () => void) {
-    console.log("attacking event")
-    resolve()
+    // fire async event to wait for attack to finish
+
+    const completeHandler = (e: Event) => {
+      const customEvent = e as CustomEvent<{whoId: string}>
+      if (customEvent.detail.whoId === this.event.who) {
+        document.removeEventListener("PersonAttackingComplete", completeHandler)
+        resolve()
+      }
+    }
+
+    document.addEventListener("PersonAttackingComplete", completeHandler)
+    // }
   }
 
   textMessage(resolve: () => void) {

@@ -19,18 +19,21 @@ class GameObject {
         this.width = config.width;
         this.height = config.height;
         this.direction = config.direction;
+        this.vanishDuration = config.vanishDuration || 500;
         this.sprite = new Sprite({
             gameObject: this,
             src: config.src,
             currentAnimation: config.currentAnimation,
             tileSize: config.tileSize,
-            useShadow: config.useShadow
+            useShadow: config.useShadow,
+            vanishDuration: config.vanishDuration || 500
         });
         // fix behavior type
         this.behaviorLoop = config.behaviorLoop || [];
         this.behaviorLoopIndex = 0;
         this.talking = config.talking || [];
         this.isAttacking = false;
+        this.isAlive = true;
     }
     // mount wall
     mount(map) {
