@@ -29,6 +29,7 @@ class GameObject {
   state!: {[key: string]: any}
   isAlive: boolean
   vanishDuration?:number
+  vanished:boolean
 
   constructor(config: GameObjectConfig) {
     this.isStanding = false
@@ -56,6 +57,7 @@ class GameObject {
     this.talking = config.talking || []
 
     this.isAttacking = false
+    this.vanished = false
     this.isAlive = true
   }
 

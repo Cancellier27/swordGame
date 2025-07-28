@@ -33,6 +33,7 @@ class GameObject {
         this.behaviorLoopIndex = 0;
         this.talking = config.talking || [];
         this.isAttacking = false;
+        this.vanished = false;
         this.isAlive = true;
     }
     // mount wall

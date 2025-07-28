@@ -4,6 +4,8 @@ class DirectionInputs {
   heldDirections: string[]
   directionMap: {[key: string]: string}
   validDiagonalMovements: string[]
+  keyDownFunction: (e: KeyboardEvent) => void
+  keyUpFunction: (e: KeyboardEvent) => void
 
   constructor() {
     this.heldDirections = []
@@ -28,6 +30,24 @@ class DirectionInputs {
       "down-left",
       "left-down"
     ]
+
+    this.keyDownFunction = (e: KeyboardEvent) => {
+      const dir: string = this.directionMap[e.code]
+      const index = this.heldDirections.indexOf(dir)
+
+      if (dir && index === -1) {
+        this.heldDirections.unshift(dir)
+      }
+    }
+
+    this.keyUpFunction = (e: KeyboardEvent) => {
+      const dir: string = this.directionMap[e.code]
+      const index = this.heldDirections.indexOf(dir)
+
+      if (dir && index > -1) {
+        this.heldDirections.splice(index, 1)
+      }
+    }
   }
 
   // acts like a value from the class but it is dynamic and always will have the 0 value from the heldDirections array
@@ -45,24 +65,17 @@ class DirectionInputs {
     }
   }
 
+  unbind() {
+    this.heldDirections = []
+    // Remove events
+    document.removeEventListener("keydown", this.keyDownFunction)
+    document.removeEventListener("keyup", this.keyUpFunction)
+  }
+
   init() {
     // event listener for when a key is pressed to ADD that arrow value into the helDirections array
-    document.addEventListener("keydown", (e) => {
-      const dir: string = this.directionMap[e.code]
-      const index = this.heldDirections.indexOf(dir)
-
-      if (dir && index === -1) {
-        this.heldDirections.unshift(dir)
-      }
-    })
+    document.addEventListener("keydown", this.keyDownFunction)
     // event listener for when a key is pressed to REMOVE that arrow value into the helDirections array
-    document.addEventListener("keyup", (e) => {
-      const dir: string = this.directionMap[e.code]
-      const index = this.heldDirections.indexOf(dir)
-
-      if (dir && index > -1) {
-        this.heldDirections.splice(index, 1)
-      }
-    })
+    document.addEventListener("keyup", this.keyUpFunction)
   }
 }

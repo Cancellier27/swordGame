@@ -133,6 +133,7 @@ class OverWorldEvent {
       onComplete: () => {
         resolve()
         this.map.isPaused = false
+        this.map.overWorld?.directionInput.init()
         this.map.overWorld?.startGameLoop(60)
       }
     })

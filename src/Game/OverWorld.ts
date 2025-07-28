@@ -85,10 +85,10 @@ class OverWorld {
         return a.y - b.y
       })
       .forEach((object) => {
-        // if dead do not render it
-        // if (object.state.hp > 0) {
-        object.sprite.draw(this.ctx, cameraPerson, step)
-        // }
+        // When enemy disappear do not try to draw it.
+        if (!object.vanished) {
+          object.sprite.draw(this.ctx, cameraPerson, step)
+        }
       })
     // Draw UPPER tiles layer
     this.map.drawUpperImage(this.ctx, cameraPerson)
@@ -108,6 +108,7 @@ class OverWorld {
       if (!this.map.isCutscenePlaying) {
         // is there any NPC here to talk to?
         this.map.startCutscene([{type: "pause"}])
+        this.directionInput.unbind()
       }
     })
   }
@@ -148,16 +149,9 @@ class OverWorld {
     // start game loop
     this.startGameLoop(60)
 
-    // max text size
-    // this.map.startCutscene([
-    //   {
-    //     type: "textMessage",
-    //     text: "Hello There! how are you doing today? Hello There! how are you doing today? Hello There! how are you doing today? Hello There!"
-    //   }
-    // ])
+    setTimeout(() => {
+      this.map.startCutscene([{type: "pause"}])
 
-    // this.map.startCutscene([
-    //   {type: "changeMap", map: "Kitchen"}
-    // ])
+    }, 100)
   }
 }
