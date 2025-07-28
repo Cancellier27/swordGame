@@ -28,6 +28,7 @@ class OverWorldMap {
         // mount map walls
         this.collisionData = config.collisionData;
         this.mountMapWalls(this.collisionData);
+        this.isPaused = false;
     }
     drawLowerImage(ctx, cameraPerson) {
         ctx.drawImage(this.lowerImage, utils.withGrid(10.5) - cameraPerson.x, utils.withGrid(6) - cameraPerson.y);
@@ -149,7 +150,7 @@ class OverWorldMap {
             }
             else {
                 let enemyClass = key.split("_")[0];
-                this.gameObjects[key]["state"] = EnemyState[enemyClass];
+                this.gameObjects[key]["state"] = Object.assign({}, EnemyState[enemyClass]);
             }
         });
     }

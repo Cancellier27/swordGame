@@ -17,6 +17,7 @@ class OverWorldMap {
   overWorld: OverWorld | null
   collisionData: number[][]
   attacking: Attack
+  isPaused: boolean
 
   constructor(config: OverWorldMapConfig) {
     this.overWorld = null
@@ -44,6 +45,8 @@ class OverWorldMap {
     // mount map walls
     this.collisionData = config.collisionData
     this.mountMapWalls(this.collisionData)
+
+    this.isPaused = false
   }
 
   drawLowerImage(ctx: CanvasRenderingContext2D, cameraPerson: GameObject) {
@@ -178,7 +181,7 @@ class OverWorldMap {
         this.gameObjects[key]["state"] = PlayerState
       } else {
         let enemyClass = key.split("_")[0]
-        this.gameObjects[key]["state"] = EnemyState[enemyClass as keyof typeof EnemyState]
+        this.gameObjects[key]["state"] = {...EnemyState[enemyClass as keyof typeof EnemyState]}
       }
     })
   }

@@ -77,6 +77,7 @@ class Attack {
     if (enemyHp - attackStrength <= 0) {
       setTimeout(() => {
         this.map.removeWall(object.x / 16, object.y / 16)
+        object.vanished = true
       }, object.vanishDuration)
     }
   }
