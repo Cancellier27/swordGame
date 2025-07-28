@@ -126,6 +126,20 @@ class OverWorldEvent {
     })
   }
 
+  pause(resolve: () => void) {
+    this.map.isPaused = true
+  
+    const newPauseInstance = new PauseMenu({
+      onComplete: () => {
+        resolve()
+        this.map.isPaused = false
+        this.map.overWorld?.startGameLoop(60)
+      }
+    })
+
+    newPauseInstance.init()
+  }
+
   init() {
     return new Promise<void>((resolve) => {
       // @ts-ignore

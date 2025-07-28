@@ -12,7 +12,7 @@ class OverWorld {
             throw new Error("2D rendering context not supported or canvas already initialized.");
         }
         this.ctx = ctx;
-        // this.map = "toBeAssigned"
+        this.count = 1;
     }
     startGameLoop(fps) {
         let previousMs = undefined;
@@ -32,8 +32,11 @@ class OverWorld {
                 delta -= step;
             }
             previousMs = timestampMs - delta * 1000;
-            // recalls the loop tick func
-            requestAnimationFrame(tick);
+            // if on Pause stop the game loop
+            if (!this.map.isPaused) {
+                // recalls the loop tick func
+                requestAnimationFrame(tick);
+            }
         };
         // initial kick off!
         requestAnimationFrame(tick);
@@ -73,6 +76,13 @@ class OverWorld {
         new KeyPressListener("Enter", () => {
             // is there any NPC here to talk to?
             this.map.checkForActionCutscene();
+        });
+        // listen for esc to pause the game
+        new KeyPressListener("Escape", () => {
+            if (!this.map.isCutscenePlaying) {
+                // is there any NPC here to talk to?
+                this.map.startCutscene([{ type: "pause" }]);
+            }
         });
     }
     bindHeroPositionCheck() {

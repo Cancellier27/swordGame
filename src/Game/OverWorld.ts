@@ -8,6 +8,7 @@ class OverWorld {
   ctx: CanvasRenderingContext2D
   map!: OverWorldMap
   directionInput!: DirectionInputs
+  count: number
 
   constructor(config: OverWorldConfig) {
     this.element = config.element
@@ -23,8 +24,7 @@ class OverWorld {
       throw new Error("2D rendering context not supported or canvas already initialized.")
     }
     this.ctx = ctx
-
-    // this.map = "toBeAssigned"
+    this.count = 1
   }
 
   startGameLoop(fps: number) {
@@ -49,8 +49,11 @@ class OverWorld {
       }
       previousMs = timestampMs - delta * 1000
 
-      // recalls the loop tick func
-      requestAnimationFrame(tick)
+      // if on Pause stop the game loop
+      if (!this.map.isPaused) {
+        // recalls the loop tick func
+        requestAnimationFrame(tick)
+      }
     }
 
     // initial kick off!
@@ -84,7 +87,7 @@ class OverWorld {
       .forEach((object) => {
         // if dead do not render it
         // if (object.state.hp > 0) {
-          object.sprite.draw(this.ctx, cameraPerson, step)
+        object.sprite.draw(this.ctx, cameraPerson, step)
         // }
       })
     // Draw UPPER tiles layer
@@ -98,6 +101,14 @@ class OverWorld {
     new KeyPressListener("Enter", () => {
       // is there any NPC here to talk to?
       this.map.checkForActionCutscene()
+    })
+
+    // listen for esc to pause the game
+    new KeyPressListener("Escape", () => {
+      if (!this.map.isCutscenePlaying) {
+        // is there any NPC here to talk to?
+        this.map.startCutscene([{type: "pause"}])
+      }
     })
   }
 
