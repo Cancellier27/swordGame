@@ -54,6 +54,7 @@ class OverWorld {
                 map: this.map
             });
         });
+        this.enemyAi.chase(cameraPerson, this.map);
         // Draw LOWER tiles layer
         this.map.drawLowerImage(this.ctx, cameraPerson);
         // Draw players and NPCs using y value as order
@@ -117,8 +118,8 @@ class OverWorld {
         this.directionInput.init();
         // start game loop
         this.startGameLoop(60);
-        setTimeout(() => {
-            this.map.startCutscene([{ type: "pause" }]);
-        }, 100);
+        // setTimeout(() => {
+        //   this.map.startCutscene([{type: "pause"}])
+        // }, 100)
     }
 }

@@ -77,6 +77,8 @@ class OverWorld {
       })
     })
 
+    this.enemyAi.chase(cameraPerson, this.map)
+
     // Draw LOWER tiles layer
     this.map.drawLowerImage(this.ctx, cameraPerson)
 
@@ -151,8 +153,8 @@ class OverWorld {
     // start game loop
     this.startGameLoop(60)
 
-    setTimeout(() => {
-      this.map.startCutscene([{type: "pause"}])
-    }, 100)
+    // setTimeout(() => {
+    //   this.map.startCutscene([{type: "pause"}])
+    // }, 100)
   }
 }
