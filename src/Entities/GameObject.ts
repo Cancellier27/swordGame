@@ -6,8 +6,6 @@ interface GameObjectConfig {
   direction: string
   tileSize: number
   useShadow: boolean
-  width: number
-  height: number
   behaviorLoop?: any[]
   talking?: any[]
   vanishDuration?:number
@@ -18,8 +16,6 @@ class GameObject {
   sprite: Sprite
   direction: string
   isMounted: boolean
-  width: number
-  height: number
   id: null | string
   behaviorLoop: any[]
   behaviorLoopIndex: number
@@ -31,6 +27,7 @@ class GameObject {
   vanishDuration?:number
   vanished:boolean
 
+
   constructor(config: GameObjectConfig) {
     this.isStanding = false
     this.id = null
@@ -38,8 +35,6 @@ class GameObject {
     this.x = config.x || 0
     this.y = config.y || 0
     this.direction = config.direction
-    this.width = config.width
-    this.height = config.height
     this.direction = config.direction
     this.vanishDuration = config.vanishDuration || 500
     this.sprite = new Sprite({

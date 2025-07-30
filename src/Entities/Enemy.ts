@@ -1,16 +1,14 @@
-interface PersonConfig extends GameObjectConfig {
+interface EnemyConfig extends GameObjectConfig {
   isPlayerControlled: boolean
 }
 
-class Person extends GameObject {
+class Enemy extends GameObject {
   movingProgressRemaining: number
   directionUpdate: {[key: string]: [string, number][]}
-  isPlayerControlled: boolean
 
-  constructor(config: PersonConfig) {
+  constructor(config: EnemyConfig) {
     super(config)
     this.movingProgressRemaining = 0
-    this.isPlayerControlled = config.isPlayerControlled
     // prettier-ignore
     this.directionUpdate = {
       "up": [["y", -1]],
@@ -32,24 +30,12 @@ class Person extends GameObject {
     if (this.movingProgressRemaining > 0) {
       this.updatePosition()
     } else {
-      // more cases to start to walk wil come here
-
-      // arrow comes from the direction input event listener defined in overWorld gameLoop.
-      // To player be able to more, the person needs to be a: Player, have an direction arrow, an Id and there should be no cutscene playing
-      if (!state.map.isCutscenePlaying && this.isPlayerControlled && state.arrow && this.id) {
-        if (this.isAttacking) {
-          this.startBehavior(state, {
-            type: "attack",
-            direction: state.arrow,
-            who: this.id
-          })
-        } else {
-          this.startBehavior(state, {
-            type: "walk",
-            direction: state.arrow,
-            who: this.id
-          })
-        }
+      if (!state.map.isCutscenePlaying && state.arrow && this.id) {
+        this.startBehavior(state, {
+          type: "walk",
+          direction: state.arrow,
+          who: this.id
+        })
       }
       this.updateSprite()
     }

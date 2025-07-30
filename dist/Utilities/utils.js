@@ -232,5 +232,22 @@ const utils = {
     },
     getOneDirection(direction) {
         return direction.split("-")[0];
+    },
+    getChaseDirection(targetX, targetY, chasingX, chasingY) {
+        let dirX = "";
+        let dirY = "";
+        if (targetX > chasingX) {
+            dirX = "right";
+        }
+        else if (targetX < chasingX) {
+            dirX = "left";
+        }
+        if (targetY > chasingY) {
+            dirY = "down";
+        }
+        else if (targetY < chasingY) {
+            dirY = "up";
+        }
+        return dirX === "" ? dirY : dirY === "" ? dirX : `${dirX}-${dirY}`;
     }
 };

@@ -12,8 +12,6 @@ const TestMap = {
             src: "../images/characters/people/player.png",
             tileSize: 48,
             useShadow: true,
-            width: 16,
-            height: 16
         }),
         slime_1: new Person({
             x: utils.withGrid(14),
@@ -21,11 +19,9 @@ const TestMap = {
             isPlayerControlled: false,
             currentAnimation: "idle-down",
             direction: "down",
-            src: "../images/characters/people/slime.png",
-            tileSize: 32,
+            src: "../images/characters/people/player.png",
+            tileSize: 48,
             useShadow: false,
-            width: 16,
-            height: 16,
             behaviorLoop: [
                 { type: "stand", direction: "up", time: 800 },
                 { type: "stand", direction: "right", time: 1800 },

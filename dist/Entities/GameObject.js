@@ -16,8 +16,6 @@ class GameObject {
         this.x = config.x || 0;
         this.y = config.y || 0;
         this.direction = config.direction;
-        this.width = config.width;
-        this.height = config.height;
         this.direction = config.direction;
         this.vanishDuration = config.vanishDuration || 500;
         this.sprite = new Sprite({
