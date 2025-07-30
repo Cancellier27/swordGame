@@ -1,6 +1,7 @@
 class PauseMenu {
   onComplete: () => void
   esc!: KeyPressListener
+  enter!: KeyPressListener
   mainContainer!: HTMLElement
   element!: HTMLDivElement
   leftIndex: number
@@ -12,7 +13,7 @@ class PauseMenu {
   }
 
   pauseMenuMainPage() {
-    const liItems = document.querySelectorAll(".left-ul li")
+    const liItems = [...document.querySelectorAll(".left-ul li")]
 
     function updateSelection(index: number) {
       liItems.forEach((item, i) => {
@@ -33,10 +34,56 @@ class PauseMenu {
     }
 
     document.addEventListener("keydown", this.leftKeyPressFn)
+    
+    this.enter = new KeyPressListener("Enter", () => {
+      let selectedItem = liItems.filter((item) => item.className)[0].textContent?.substring(1)
+
+      if (selectedItem) {
+        this.populateRightSide(selectedItem)
+      }
+    })
+  }
+
+  populateRightSide(item: string) {
+    const rightContainer = document.querySelector(".pause-list-right")
+
+    if (!rightContainer) return
+
+    if (item === "Character") {
+      rightContainer.innerHTML = `
+    <ul class="left-ul">
+      <li>Character</li>
+    </ul>`
+    }
+    if (item === "Items") {
+      rightContainer.innerHTML = `
+    <ul class="left-ul">
+      <li>Items</li>
+    </ul>`
+    }
+    if (item === "Map") {
+      rightContainer.innerHTML = `
+    <ul class="left-ul">
+      <li>Map</li>
+    </ul>`
+    }
+    if (item === "Save") {
+      rightContainer.innerHTML = `
+    <ul class="left-ul">
+      <li>Save</li>
+    </ul>`
+    }
+    if (item === "Quit") {
+      rightContainer.innerHTML = `
+    <ul class="left-ul">
+      <li>Quit</li>
+    </ul>`
+    }
   }
 
   close() {
     this.esc?.unbind()
+    this.enter?.unbind()
     this.onComplete()
     this.element.remove()
     document.removeEventListener("keydown", this.leftKeyPressFn)
@@ -47,31 +94,28 @@ class PauseMenu {
     this.element = document.createElement("div") as HTMLDivElement
     this.element.classList.add("pause-menu-element")
 
-    this.element.innerHTML = `<h3>Pause</h3> 
-    <div class="pause-list-container">
-      <div class="pause-list-left">
-        <ul class="left-ul">
-          <li><span class="left-selector">&gt;</span>Character</li>
-          <li><span class="left-selector">&gt;</span>Items</li>
-          <li><span class="left-selector">&gt;</span>Map</li>
-          <li><span class="left-selector">&gt;</span>Save</li>
-          <li><span class="left-selector">&gt;</span>Quit</li>
-        </ul>
-      </div>
-      <div class="pause-list-right">
-        <ul class="right-ul">
-          <li>Character</li>
-          <li>Items</li>
-          <li>Map</li>
-          <li>Save</li>
-          <li>Quit</li>
-        </ul>
-      </div>
-    </div>`
+    this.element.innerHTML = `
+<h3>Pause</h3>
+<div class="pause-list-container">
+  <div class="pause-list-left">
+    <ul class="left-ul">
+      <li><span class="left-selector">&gt;</span>Character</li>
+      <li><span class="left-selector">&gt;</span>Items</li>
+      <li><span class="left-selector">&gt;</span>Map</li>
+      <li><span class="left-selector">&gt;</span>Save</li>
+      <li><span class="left-selector">&gt;</span>Quit</li>
+    </ul>
+  </div>
+  <div class="pause-list-right">
+    
+  </div>
+</div>
+`
 
     this.mainContainer.appendChild(this.element)
     this.esc = new KeyPressListener("Escape", () => this.close())
 
     this.pauseMenuMainPage()
+    this.populateRightSide("Character")
   }
 }

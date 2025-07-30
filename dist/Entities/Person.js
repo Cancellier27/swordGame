@@ -21,8 +21,6 @@ class Person extends GameObject {
         };
     }
     update(state) {
-        // if Person is dead, do not do anything
-        // if (this.isAlive) return
         if (this.movingProgressRemaining > 0) {
             this.updatePosition();
         }

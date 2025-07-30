@@ -9,6 +9,7 @@ class OverWorld {
   map!: OverWorldMap
   directionInput!: DirectionInputs
   count: number
+  enemyAi!: EnemyAi
 
   constructor(config: OverWorldConfig) {
     this.element = config.element
@@ -134,6 +135,7 @@ class OverWorld {
     this.map.mountObjects()
     // load save state
     this.map.loadObjectsState()
+    this.enemyAi = new EnemyAi(this.map.gameObjects)
   }
 
   init() {
@@ -151,7 +153,6 @@ class OverWorld {
 
     setTimeout(() => {
       this.map.startCutscene([{type: "pause"}])
-
     }, 100)
   }
 }

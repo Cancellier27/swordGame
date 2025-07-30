@@ -29,10 +29,7 @@ class Person extends GameObject {
   }
 
   update(state: {arrow: string; map: OverWorldMap}) {
-    // if Person is dead, do not do anything
-    // if (this.isAlive) return
-
-    if (this.movingProgressRemaining > 0) {
+     if (this.movingProgressRemaining > 0) {
       this.updatePosition()
     } else {
       // more cases to start to walk wil come here

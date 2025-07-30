@@ -106,6 +106,7 @@ class OverWorld {
         this.map.mountObjects();
         // load save state
         this.map.loadObjectsState();
+        this.enemyAi = new EnemyAi(this.map.gameObjects);
     }
     init() {
         this.startMap("TestMap");
