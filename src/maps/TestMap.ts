@@ -12,14 +12,14 @@ const TestMap = {
       tileSize: 48,
       useShadow: true,
     }),
-    slime_1: new Person({
+    slime_1: new Enemy({
       x: utils.withGrid(14),
       y: utils.withGrid(18),
       isPlayerControlled: false,
       currentAnimation: "idle-down",
       direction: "down",
-      src: "../images/characters/people/player.png",
-      tileSize: 48,
+      src: "../images/characters/people/slime.png",
+      tileSize: 32,
       useShadow: false,
       behaviorLoop: [
         {type: "stand", direction: "up", time: 800},

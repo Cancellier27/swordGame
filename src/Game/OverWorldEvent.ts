@@ -116,6 +116,13 @@ class OverWorldEvent {
   changeMap(resolve: () => void) {
     if (!this.event.map) return
 
+    // Reset all entities before map change
+    Object.values(this.map.gameObjects).forEach((object) => {
+      if (object instanceof Enemy) {
+        object.resetAnimationState()
+      }
+    })
+
     const sceneTransitionFog = new SceneTransition()
 
     sceneTransitionFog.init(document.querySelector(".game-container") as HTMLDivElement, () => {
@@ -126,15 +133,15 @@ class OverWorldEvent {
     })
   }
 
-  pause(resolve: () => void) {
+  pause(resolve: () => void) { 
     this.map.isPaused = true
-  
+
     const newPauseInstance = new PauseMenu({
       onComplete: () => {
         resolve()
         this.map.isPaused = false
         this.map.overWorld?.directionInput.init()
-        this.map.overWorld?.startGameLoop(60)
+        this.map.overWorld?.resumeGame()
       }
     })
 

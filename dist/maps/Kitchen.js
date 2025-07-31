@@ -12,8 +12,6 @@ const Kitchen = {
             src: "../images/characters/people/player.png",
             tileSize: 48,
             useShadow: false,
-            width: 16,
-            height: 16
         }),
         slime_1: new Person({
             x: utils.withGrid(10),
@@ -24,8 +22,6 @@ const Kitchen = {
             src: "../images/characters/people/slime.png",
             tileSize: 32,
             useShadow: false,
-            width: 16,
-            height: 16,
             talking: [
                 {
                     events: [

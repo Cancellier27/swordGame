@@ -2,12 +2,16 @@ interface EnemyAiConfig {}
 
 class EnemyAi {
   gameObjects: {[key: string]: GameObject}
+  movementDelay: number
 
   constructor(gameObjects: {[key: string]: GameObject}) {
     this.gameObjects = gameObjects
+    this.movementDelay = 0
   }
 
   chase(who: GameObject, map: OverWorldMap) {
+
+
     // coordinates of who to chase
     let whoX = who.x
     let whoY = who.y
@@ -40,9 +44,10 @@ class EnemyAi {
             )
           }
         }
-        object.updateSprite()
+        // object.updateSprite()
       }
     })
+
   }
 
   init() {}

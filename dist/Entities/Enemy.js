@@ -23,16 +23,16 @@ class Enemy extends GameObject {
         if (this.movingProgressRemaining > 0) {
             this.updatePosition();
         }
-        else {
-            if (!state.map.isCutscenePlaying && state.arrow && this.id) {
-                this.startBehavior(state, {
-                    type: "walk",
-                    direction: state.arrow,
-                    who: this.id
-                });
-            }
-            this.updateSprite();
-        }
+        // else {
+        //   if (!state.map.isCutscenePlaying && state.arrow && this.id) {
+        //     this.startBehavior(state, {
+        //       type: "walk",
+        //       direction: state.arrow,
+        //       who: this.id
+        //     })
+        //   }
+        // }
+        this.updateSprite();
     }
     startBehavior(state, behavior) {
         // set the character to walk or do some behavior
@@ -111,7 +111,7 @@ class Enemy extends GameObject {
             state.map.moveWall(this.x, this.y, this.direction);
             // keep walking!
             this.movingProgressRemaining = 4;
-            // this.updateSprite()
+            this.updateSprite();
         }
     }
     // update player position and movingProgressRemaining
@@ -141,6 +141,18 @@ class Enemy extends GameObject {
                 whoId: this.id
             });
         }
+    }
+    // Add this method to your Enemy class:
+    resetAnimationState() {
+        // Reset sprite animation timing
+        if (this.sprite) {
+            this.sprite.animationFrameLimitProgress = 0;
+            this.sprite.currentAnimationFrame = 0;
+        }
+        // Reset any movement progress
+        this.movingProgressRemaining = 0;
+        // Force sprite update
+        // this.updateSprite()
     }
     updateSprite() {
         // check if the entity is alive, hp > 0

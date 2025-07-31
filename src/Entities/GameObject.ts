@@ -8,7 +8,7 @@ interface GameObjectConfig {
   useShadow: boolean
   behaviorLoop?: any[]
   talking?: any[]
-  vanishDuration?:number
+  vanishDuration?: number
 }
 class GameObject {
   x: number
@@ -24,9 +24,8 @@ class GameObject {
   isAttacking: boolean
   state!: {[key: string]: any}
   isAlive: boolean
-  vanishDuration?:number
-  vanished:boolean
-
+  vanishDuration?: number
+  vanished: boolean
 
   constructor(config: GameObjectConfig) {
     this.isStanding = false
@@ -85,6 +84,7 @@ class GameObject {
     if (map.isCutscenePlaying || this.behaviorLoop.length === 0 || this.isStanding) {
       return
     }
+    console.log(`${this.id}-bahavioring`)
 
     // check what behavior we are on
     let eventConfig = this.behaviorLoop[this.behaviorLoopIndex]

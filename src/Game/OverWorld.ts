@@ -34,27 +34,24 @@ class OverWorld {
     // loop at X fps, 60 in this game
     const step = 1 / fps
     const tick = (timestampMs: number) => {
-      // for later on in the code
-      // if (this.hasStopped) {
-      //   return
-      // }
+      // if on Pause stop the game loop
+      if (this.map.isPaused) {
+        return
+      }
 
       if (previousMs === undefined) {
         previousMs = timestampMs
       }
 
       let delta = (timestampMs - previousMs) / 1000
+
       while (delta >= step) {
         this.loop(step)
         delta -= step
       }
       previousMs = timestampMs - delta * 1000
 
-      // if on Pause stop the game loop
-      if (!this.map.isPaused) {
-        // recalls the loop tick func
-        requestAnimationFrame(tick)
-      }
+      requestAnimationFrame(tick)
     }
 
     // initial kick off!
@@ -77,7 +74,7 @@ class OverWorld {
       })
     })
 
-    this.enemyAi.chase(cameraPerson, this.map)
+    // this.enemyAi.chase(cameraPerson, this.map)
 
     // Draw LOWER tiles layer
     this.map.drawLowerImage(this.ctx, cameraPerson)
@@ -138,6 +135,26 @@ class OverWorld {
     // load save state
     this.map.loadObjectsState()
     this.enemyAi = new EnemyAi(this.map.gameObjects)
+
+    // Re-initialize NPCs on new map
+    Object.values(this.map.gameObjects).forEach((object) => {
+      if (object instanceof Enemy) {
+        object.resetAnimationState()
+      }
+    })
+  }
+
+  // In your OverWorld class, add this method:
+  resumeGame() {
+    // Reset all NPC animation states
+    Object.values(this.map.gameObjects).forEach((object) => {
+      if (object instanceof Enemy) {
+        object.resetAnimationState()
+      }
+    })
+
+    // Resume the game loop
+    this.startGameLoop(60) // or your desired fps
   }
 
   init() {

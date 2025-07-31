@@ -51,6 +51,7 @@ class GameObject {
             if (map.isCutscenePlaying || this.behaviorLoop.length === 0 || this.isStanding) {
                 return;
             }
+            console.log(`${this.id}-bahavioring`);
             // check what behavior we are on
             let eventConfig = this.behaviorLoop[this.behaviorLoopIndex];
             eventConfig.who = this.id;

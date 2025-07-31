@@ -76,6 +76,12 @@ class OverWorldEvent {
     changeMap(resolve) {
         if (!this.event.map)
             return;
+        // Reset all entities before map change
+        Object.values(this.map.gameObjects).forEach((object) => {
+            if (object instanceof Enemy) {
+                object.resetAnimationState();
+            }
+        });
         const sceneTransitionFog = new SceneTransition();
         sceneTransitionFog.init(document.querySelector(".game-container"), () => {
             var _a;
@@ -92,7 +98,7 @@ class OverWorldEvent {
                 resolve();
                 this.map.isPaused = false;
                 (_a = this.map.overWorld) === null || _a === void 0 ? void 0 : _a.directionInput.init();
-                (_b = this.map.overWorld) === null || _b === void 0 ? void 0 : _b.startGameLoop(60);
+                (_b = this.map.overWorld) === null || _b === void 0 ? void 0 : _b.resumeGame();
             }
         });
         newPauseInstance.init();

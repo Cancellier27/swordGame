@@ -2,6 +2,7 @@
 class EnemyAi {
     constructor(gameObjects) {
         this.gameObjects = gameObjects;
+        this.movementDelay = 0;
     }
     chase(who, map) {
         // coordinates of who to chase
@@ -30,7 +31,7 @@ class EnemyAi {
                         });
                     }
                 }
-                object.updateSprite();
+                // object.updateSprite()
             }
         });
     }
