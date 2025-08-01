@@ -132,29 +132,14 @@ class OverWorld {
     this.map.overWorld = this
     // mount objects walls
     this.map.mountObjects()
+
+    Object.values(this.map.gameObjects).forEach((object) => {
+      object.isActive = true
+    })
+    
     // load save state
     this.map.loadObjectsState()
     this.enemyAi = new EnemyAi(this.map.gameObjects)
-
-    // Re-initialize NPCs on new map
-    Object.values(this.map.gameObjects).forEach((object) => {
-      if (object instanceof Enemy) {
-        object.resetAnimationState()
-      }
-    })
-  }
-
-  // In your OverWorld class, add this method:
-  resumeGame() {
-    // Reset all NPC animation states
-    Object.values(this.map.gameObjects).forEach((object) => {
-      if (object instanceof Enemy) {
-        object.resetAnimationState()
-      }
-    })
-
-    // Resume the game loop
-    this.startGameLoop(60) // or your desired fps
   }
 
   init() {

@@ -10,6 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 class GameObject {
     constructor(config) {
+        this.isAlive = true;
+        this.vanished = false;
+        this.isActive = true;
         this.isStanding = false;
         this.id = null;
         this.isMounted = false;
@@ -31,30 +34,34 @@ class GameObject {
         this.behaviorLoopIndex = 0;
         this.talking = config.talking || [];
         this.isAttacking = false;
-        this.vanished = false;
-        this.isAlive = true;
     }
-    // mount wall
+    // mount objects, called only once
     mount(map) {
         this.isMounted = true;
         map.addWall(this.x / 16, this.y / 16);
         // if we have a behavior, kick off after a short delay
         setTimeout(() => {
-            this.doBehaviorEvent(map);
+            if (this.isActive) {
+                this.doBehaviorEvent(map);
+            }
         }, 10);
+    }
+    unmount() {
+        this.isActive = false;
     }
     update(state) { }
     startBehavior(state, behavior) { }
     //  do not do anything is there is no behavior loop
     doBehaviorEvent(map) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (map.isCutscenePlaying || this.behaviorLoop.length === 0 || this.isStanding) {
+            if (map.isCutscenePlaying || this.behaviorLoop.length === 0 || this.isStanding || !this.isActive) {
+                console.log(`${this.id}: Return`);
                 return;
             }
-            console.log(`${this.id}-bahavioring`);
             // check what behavior we are on
             let eventConfig = this.behaviorLoop[this.behaviorLoopIndex];
             eventConfig.who = this.id;
+            // if (!this.isActive) return
             // create an event instance of our event config
             if (eventConfig.type === "walk") {
                 // create for instances of walking to compensate the 16x16 grid used, as the character only walks 4 pixel per frame.
@@ -67,6 +74,7 @@ class GameObject {
                 const eventHandler = new OverWorldEvent({ map, event: eventConfig });
                 yield eventHandler.init();
             }
+            console.log("done");
             // go to the next loop
             this.behaviorLoopIndex += 1;
             // reset the behavior loop
@@ -74,7 +82,9 @@ class GameObject {
                 this.behaviorLoopIndex = 0;
             }
             // do it again!
-            this.doBehaviorEvent(map);
+            if (this.isActive) {
+                this.doBehaviorEvent(map);
+            }
         });
     }
 }

@@ -118,9 +118,7 @@ class OverWorldEvent {
 
     // Reset all entities before map change
     Object.values(this.map.gameObjects).forEach((object) => {
-      if (object instanceof Enemy) {
-        object.resetAnimationState()
-      }
+      object.isActive = false
     })
 
     const sceneTransitionFog = new SceneTransition()
@@ -133,15 +131,26 @@ class OverWorldEvent {
     })
   }
 
-  pause(resolve: () => void) { 
+  pause(resolve: () => void) {
     this.map.isPaused = true
+
+    Object.values(this.map.gameObjects).forEach((object) => {
+      object.isActive = false
+    })
 
     const newPauseInstance = new PauseMenu({
       onComplete: () => {
         resolve()
         this.map.isPaused = false
         this.map.overWorld?.directionInput.init()
-        this.map.overWorld?.resumeGame()
+        this.map.overWorld?.startGameLoop(60)
+
+        setTimeout(() => {
+          Object.values(this.map.gameObjects).forEach((object) => {
+            object.isActive = true
+            object.doBehaviorEvent(this.map)
+          })
+        }, 1000)
       }
     })
 

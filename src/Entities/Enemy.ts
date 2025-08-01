@@ -29,7 +29,7 @@ class Enemy extends GameObject {
   update(state: {arrow: string; map: OverWorldMap}) {
     if (this.movingProgressRemaining > 0) {
       this.updatePosition()
-     } 
+    }
     // else {
     //   if (!state.map.isCutscenePlaying && state.arrow && this.id) {
     //     this.startBehavior(state, {
